@@ -1,0 +1,261 @@
+<!-- chrome --allow-file-access-from-files ローカル起動用コマンド -->
+
+<!DOCTYPE html>
+<html>
+<!-- Streamie.org 
+     Thank you for viewing source!
+     
+     For more see http://github.com/cramforce/streamie
+     
+     Learn how to make your own version of streamie without having to run your own server:
+     http://j.mp/c6EFKk
+     
+     We use all the hot stuff
+     - Backend is built on node.js
+     - Web sockets via socket.io
+     - CSS via less.js
+     - Loading via require.js
+     - underscore.js to make the JavaScript saner
+     - yes, also jQuery for DOM manipulation
+     
+     
+     Simplified BSD License
+     
+     Copyright 2010 Malte Ubl. All rights reserved.
+
+     Redistribution and use in source and binary forms, with or without modification, are
+     permitted provided that the following conditions are met:
+
+        1. Redistributions of source code must retain the above copyright notice, this list of
+           conditions and the following disclaimer.
+
+        2. Redistributions in binary form must reproduce the above copyright notice, this list
+           of conditions and the following disclaimer in the documentation and/or other materials
+           provided with the distribution.
+
+     THIS SOFTWARE IS PROVIDED BY MALTE UBL ``AS IS'' AND ANY EXPRESS OR IMPLIED
+     WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+     FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL MALTE UBL OR
+     CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+     CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+     SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+     ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+     NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+     ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+     The views and conclusions contained in the software and documentation are those of the
+     authors and should not be interpreted as representing official policies, either expressed
+     or implied, of Malte Ubl.
+-->
+
+<head>
+	<title>Candy</title>
+	<meta charset="UTF-8" />
+    <!-- IEでchromeエンジンを起動-->
+	<meta http-equiv="X-UA-Compatible" content="chrome=1" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- 呼び出された場合は新規ウィンドウで開く -->
+	<base target="_blank" />
+	<meta name="language" content="en-US" />
+	<link rel="stylesheet" type="text/css" href="css/streamie.less.css" media="screen,projection,print" />
+	<script src="ext/less-1.0.35.min.js"></script>
+	<!-- twitterbootstrap Shimizu-->
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- CSSをブラウザによって変換 -->
+	<link rel="stylesheet/less" type="text/css" href="css/streamie.less" media="screen,projection,print" />
+    <!-- CSS用にlessを使用 -->
+	<script src="js/less.js" type="text/javascript"></script>
+	<!-- リロード時のlessファイルのリフレッシュ -->
+	<script>
+	  less.refresh(true); // localstorage caching is bad for frequent releases
+	</script>
+	<!-- jquery最新版を自動利用　-->
+	<script type="text/javascript" src="//www.google.com/jsapi">
+	</script>
+	<script type="text/javascript">
+	  google.load("language", "1");
+	</script>
+    <!-- アドレスバー用のアイコン -->
+	<link href='images/Candy_shortcut.png' rel='shortcut icon' />
+</head>
+
+<!-- id、classによって動作を決定する　-->
+<body id="www-streamie-org"  class="loading">
+	<div id="container-fruid">
+        <!--header idでくくられた場所はログイン時の画面　-->
+		<div id="header">
+			<h1 id="logo"><a href="#" target="_self" class="i18n">streamie beta for <span id="currentuser-screen_name"></span></a></h1>
+			<div id="meta"><a href="#" class="logout i18n">Logout</a></div>
+			<ul id="mainnav">
+				<li class="activatable rpl"><a href="#mention" class="i18n" title="Mentions" target="_self">@</a></li>
+				<li class="activatable timeline active"><a href="#all" class="i18n" title="Show All" target="_self">⚛</a></li>
+				<li class="activatable rt"><a href="#retweet" class="i18n" title="Retweets" target="_self">♻</a></li>
+				<li class="activatable fv"><a href="#starred" class="i18n" title="Favorites" target="_self">★</a></li>
+				<li class="activatable dm"><a href="#direct" class="i18n" title="Direct Messages" target="_self">✉</a></li>
+				<li class="settings"><a href="#settings" class="i18n" title="Settings" target="_self">⚙</a></li>
+				<li class="add"><a href="#add" class="i18n" title="New Tweet" target="_self">✍</a></li>
+			</ul>
+            <!--投稿画面 -->
+			<form action="/1/statuses/update.json" method="post" class="status tweet" id="mainstatus">
+				<input type="hidden" name="in_reply_to_status_id" value="" />
+				<input type="hidden" name="lat" value="" />
+				<input type="hidden" name="long" value="" />
+				<input type="hidden" name="display_coordinates" value="" />
+				<fieldset class="addons">
+					<a href="#" class="directMessage i18n">Direct Message</a>
+					<a href="#" class="shortenURLs i18n">Shorten URLs</a>
+					<a href="#" class="attachImage i18n">Attach an Image</a>
+				</fieldset>
+				<fieldset> 
+					<textarea name="status" rows="5" cols="40" class="i18n" placeholder="Your Tweet…"></textarea>
+					<span class="characters">0</span> 
+					<input type="submit" value="Tweet" class="button" />
+				</fieldset>
+			</form>
+			<div id="settings" class="panel"></div>
+		</div>
+		<div id="content">
+		  <div class="logo"><img src="images/Candy_logo.png"  width="319" height="257" /></div>
+          <!--about idでくくられた場所は否ログイン時の画面　-->
+			<div id="about">
+             <div class="container">
+				<p class="point i18n">
+                    大事なツイートだけを、お届けします。
+                </p>
+				
+				<p><a href="/access" class="inject-hl" target="_self"><img src="https://si0.twimg.com/images/dev/buttons/sign-in-with-twitter-d.png" alt="Sign in with Twitter" /></a></p>
+                
+             </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-4 col-md-4">
+                            <h2>キュレーション</h2>
+                            <p>キャンディは、全てのツイートを表示する事はしません。今までのTwitterでの行動を分析し、あなたにぴったりのツイートだけで作られたタイムラインをお届けします。</p>
+                        </div>
+                        <div class="col-xs-4 col-md-4">
+                            <h2>学習アルゴリズム</h2>
+                            <p>キャンディは、あなたのことをもっと知りたがっています。使えば使う程、素晴らしいパートナーへと成長していくでしょう。</p>
+                        </div>
+                        <div class="col-xs-4 col-md-4">
+                            <h2>カスタムタイムラインとの同期</h2>
+                            <p>キャンディのタイムラインは、カスタムタイムラインと同期出来ます。あなたに近い趣向をもつユーザに対し、簡単に情報を伝える事が可能です。</p>
+                        </div>
+                    </div>
+                    
+                    
+                    <hr>
+                    
+                </div>
+                
+				<p class="point">
+                <!--
+                <ul>
+				    <li><a href="/?hl=ar">في عربية</a></li>
+				    <li><a href="/?hl=bg">на български</a></li>
+				    <li><a href="/?hl=en">in english</a></li>
+				    <li><a href="/?hl=fr">en français</a></li>
+				    <li><a href="/?hl=lv">latviešu valodā</a></li>
+				    <li><a href="/?hl=nl">in het Nederlands</a></li>
+				    <li><a href="/?hl=pt">em Português</a></li>
+				    <li><a href="/?hl=ru">на русском языке</a></li>
+			    </ul>
+                -->
+				</p>
+                <p class="point i18n">
+                    <b>Our philosophy</b>
+                    
+                    <br>　1「求められる」では足りない
+                    <br>　2 賞賛よりも、批判のほうが嬉しい
+                    <br>　3 過去と未来から、今日を逆算する
+                    
+                </p>
+				<p class="subline i18n">Yes,this is the open source software.<br>
+                    <a href="https://github.com/YusukeShimizu/Candy">Join us on Github</a>
+                <br>
+					<a href="https://twitter.com/Bruwbird">Follow us on Twitter</a>
+                </p>
+                <!--
+                 <a href="#moreinfo" target="_self" id="showMoreInfo">More Info</a><br>
+				<div id="moreinfo">
+					<h2 class="i18n">Cutting Edge Web Technology</h2>
+					<p class="i18n">
+						We take advantage of the latest web standards such as HTML5 and CSS3. We encourage you to update to the newest (even beta) versions 
+						of your <a href="http://www.google.com/landing/chrome/beta/">favorite web browser</a> to use streamie. If you cannot do that, 
+						streamie is not for you, if you can, the experience will be great.
+					</p>
+					<h2 class="i18n">Hackability</h2>
+					<p class="i18n">
+						Streamie was designed with extreme <b>"hackability"</b> in mind and it is <a href="http://github.com/cramforce/streamie">fully open source</a>. 
+						If you are a programmer you can make your own version of streamie. The cool thing is: You do not have to run your own server so you can 
+						concentrate on actually building the features you want. The infrastructure is handled by us. 
+						<a href="http://www.nonblocking.io/2010/08/future-is-here-i-just-forked-running.html">Learn how to make your own version of streamie.</a>
+					</p>
+					<h2 class="i18n">Beta</h2>
+					<p class="i18n">
+					  While Streamie does work quite well, it is still beta level software. If you're experiencing problems, please 
+					  <a href="http://github.com/cramforce/streamie/issues">report them.</a>
+					</p>
+				</div>
+                -->
+				
+                <footer>
+                    <p>© Bruwbird Corp</p>
+                </footer>
+					
+			</div>
+            <!-- タイムラインの表示 -->
+			<h2 class="h1 i18n">Timeline</h2>
+			<ol id="stream">
+			</ol>
+		</div>
+	</div>
+	<div id="imageUpload" class="popin">
+		<h2 class="h i18n">Image Upload</h2>
+		<div class="msg">
+			<form id="imageUploadForm"><input type="file" name="file"></form>
+			<div class="progress"></div>
+		</div>
+		<div class="buttons">
+			<input type="button" value="Cancel" class="button close i18n" />
+		</div>
+	</div>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<!-- twitterbootstrap Shimizu-->
+	<script src="js/bootstrap.min.js"></script>
+	
+	<script src="/ext/underscore.js"></script>
+	<script src="ext/socket.io/socket.io.js"></script>
+	<!-- We use require.js for loading dependencies http://requirejs.org/ -->
+    <!-- require.jsで画面レンダリングを高速化　twitter boot strapにも適用する？-->
+  <script src="ext/require.js"></script>
+  <script>
+    require({
+      baseUrl: "./",
+      paths: {
+        "stream": "/lib/stream"
+      },
+    },
+    ["stream/app"],
+      function(app) {/Users/stm1051212/Google ドライブ/streamie-master/public/lib/stream/app.js
+        app.start();
+      }
+    );
+  </script>
+  <!-- google analytics用トラッキングコード
+  <script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-4656061-3']);
+    _gaq.push(['_setDomainName', '.streamie.org']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+  </script>
+   -->
+</body> 
+</html>
