@@ -1,4 +1,4 @@
-/*
+    /*
  * Main entry point for our app
  * "start" method gets called by require.js when the initial dependencies are loaded.
  * We always have require.js, jQuery and underscore.js everwhere
