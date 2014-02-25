@@ -30,26 +30,19 @@ require.def("stream/client",
     }
     
     function connect(cb) {
-      var wait = (connectFail < 0 ? 0 : connectFail) * 1000;
-      var max  = 30 * 1000;
-      if(wait > max) {
-        wait = max;
-      }
-      console.log("[Connect] waiting for "+wait);
-      setTimeout(function () {
-        _connect(cb)
-      }, wait);
+            _connect(cb);
     }
     
     function _connect(cb) {
       window.WEB_SOCKET_SWF_LOCATION = "/foobar"; // we do not use flash, but socket.io still complaints
       var secure = location.protocol == 'https:' ? true : false;
-      var socket = new io.Socket(location.hostname, { 
-        port: location.port || (secure ? 443 : 80),
-        secure: secure,
-        transports: pickTransport()
-      });
-      socket.connect();
+      var socket = io.connect('http://localhost:3000');
+      //var socket = new io.Socket(location.hostname, {
+      //  port: location.port || (secure ? 443 : 80),
+      //  secure: secure,
+      // transports: pickTransport()
+      //});
+      //socket.connect();
       var token = cookie.get("token") || "EMPTY"; // init auth token from cookie. Backend like to receive a value so we use "EMPTY"
       // immediately after connect, send the auth token
       socket.send(JSON.stringify({

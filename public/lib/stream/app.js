@@ -4,7 +4,7 @@
  * We always have require.js, jQuery and underscore.js everwhere
  */
 
-// we really do not want to break if somebody leaves a console.log in the code
+// we really do not want to break if somebody lea   ves a console.log in the code
 //consoleログ出力用の連想配列の作成
 if(typeof console == "undefined") {
   var console = {
@@ -96,16 +96,16 @@ require.def("stream/app",
       start: function () {
         $(function () {
           //否ログイン時の詳細表示画面のコントロール
-          $('#showMoreInfo').click(function(e) {
-            e.preventDefault();
+          //$('#showMoreInfo').click(function(e) {
+          //  e.preventDefault();
             //moreinfoリンクは削除される
-            $(this).remove();
-            $('#moreinfo').show();
-          })
+          //  $(this).remove();
+          //  $('#moreinfo').show();
+          //})
           //pluginオブジェクトの結合  dataオブジェクトから取得した一つのツイート情報を格納
           stream.addPlugins(streamPlugins);
           //
-          //linkpluginオブジェクトを結合 dataオブジェクトから取得したtweetに関連するリンクや画像を格納
+          //linkpluginオブジェクトを結合 dataオブジェクトから取得したtweetに関連するリンク情報を設定する
           stream.addLinkPlugins(linkPlugins);
           
           //#後のパラメータを削除する
@@ -129,6 +129,7 @@ require.def("stream/app",
               if(initial) {
                 initial = false;
                 // run initPlugins
+                //ログイン、ハッシュタグの変更時の対応を行う
                 initPlugins.forEach(function (plugin) {
                   plugin.func.call(function () {}, stream, plugin);
                 });
