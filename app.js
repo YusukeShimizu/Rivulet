@@ -79,61 +79,23 @@ server.listen(app.get('port'), function(){
 });
 
 var socketIO = require('socket.io');
-// クライアントの接続を待つ(IPアドレスとポート番号を結びつけ)
 var io = socketIO.listen(server);
 
-// リクエストがあったとき、ログイン済みかどうか確認する関数
 var isLogined = function(req, res, next){
     if(req.isAuthenticated())
         return next();  // ログイン済み
-    // ログインしてなかったらログイン画面に飛ばす
     res.redirect("/login");
 };
 
-// Twitter認証
 app.get("/auth/twitter", passport.authenticate('twitter'));
 
-// Twitter callback
 app.get("/auth/twitter/callback", passport.authenticate('twitter', {
-    successRedirect: '/ ',
+    successRedirect: '/access',
     failureRedirect: '/'
 }));
 
-app.get("/access", isLogined, function(req, res){
-        
-        io.on('connection', function(client){
-                  console.log("Connection");
-        
-        function send(data) {
-        client.send(JSON.stringify(data))
-        }
-        
-        function now() {
-        return (new Date).getTime();
-        }
-        
-        // On Socket.io connections
-        io.on('connection', function(client){
-            console.log("Connection");
-            var subscription;
-            var last = now();
-                  
-            client.on('message', function(msg){
-                var data = JSON.parse(msg);
-                last = now();
-                            
-                if(data == "ping") {
-                    send("pong")
-                }
-                      
-                send({
-                    action: "auth_ok"
-                })
-                   
-            });
-        });
-        });
-        
+app.get("/access", function(req, res){
+	// ここにログイン後の処理が書かれる	
 });
 
 app.get('/logout/twitter', function(req, res){

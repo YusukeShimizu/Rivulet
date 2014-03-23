@@ -85,7 +85,7 @@
         <!--header idでくくられた場所はログイン時の画面　-->
 		<div id="header">
 			<h1 id="logo"><a href="#" target="_self" class="i18n">streamie beta for <span id="currentuser-screen_name"></span></a></h1>
-			<div id="meta"><a href="#" class="logout i18n">Logout</a></div>
+			<div id="meta"><a href="/logout/twitter" class="logout i18n">Logout</a></div>
 			<ul id="mainnav">
 				<li class="activatable rpl"><a href="#mention" class="i18n" title="Mentions" target="_self">@</a></li>
 				<li class="activatable timeline active"><a href="#all" class="i18n" title="Show All" target="_self">⚛</a></li>
@@ -123,7 +123,7 @@
                     大切なツイートだけを、お届けします。
                 </p>
 				
-				<p><a href="/access" class="inject-hl" target="_self"><img src="https://si0.twimg.com/images/dev/buttons/sign-in-with-twitter-d.png" alt="Sign in with Twitter" /></a></p>
+				<p><a href="/auth/twitter" class="inject-hl" target="_self"><img src="https://si0.twimg.com/images/dev/buttons/sign-in-with-twitter-d.png" alt="Sign in with Twitter" /></a></p>
                 
              </div>
                 <div class="container">
@@ -216,13 +216,13 @@
 	<script src="js/bootstrap.min.js"></script>
 	
 	<script src="/ext/underscore.js"></script>
-	<script src="ext/socket.io/socket.io.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
 	<!-- We use require.js for loading dependencies http://requirejs.org/ -->
     <!-- require.jsで画面レンダリングを高速化　twitter boot strapにも適用する？-->
   <script src="ext/require.js"></script>
   <script>
     require({
-      baseUrl: "./",
+      baseUrl: "/",
       paths: {
         "stream": "/lib/stream"
       },
