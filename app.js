@@ -8,10 +8,15 @@ var routes = require('./routes');
 var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
-var config = require('./lib/config.js').config;
-var MEMORY_STORE = config.MEMORY_STORE;
 
 var app = express();
+
+//追加モジュールのロード
+var config = require('./add_modules/config.js').config;
+var setting = require('./lib/setting');
+
+setting.passportSerialize();
+setting.passportUse(config);
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -25,7 +30,7 @@ app.use(express.methodOverride());
 app.use(express.cookieParser('your secret here'));
 app.use(express.session());
 app.use(express.cookieParser());
-app.use(express.session({secret: MEMORY_STORE}));
+app.use(express.session({secret: "Candy"}));
 
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
