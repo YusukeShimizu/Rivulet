@@ -1,7 +1,120 @@
-<!-- chrome --allow-file-access-from-files ローカル起動用コマンド -->
 
 <!DOCTYPE html>
 <html>
+
+
+<head>
+    <title>Candy</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <base target="_blank" />
+    <meta name="language" content="en-US" />
+    <link rel="stylesheet" type="text/css" href="css/streamie.less.css" media="screen,projection,print" />
+    <script src="ext/less-1.0.35.min.js"></script>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet/less" type="text/css" href="css/streamie.less" media="screen,projection,print" />
+    <script src="js/less.js" type="text/javascript"></script>
+    <script>
+        less.refresh(true); // localstorage caching is bad for frequent releases
+    </script>
+    <script type="text/javascript" src="//www.google.com/jsapi">
+    </script>
+    <link href='images/Candy_shortcut.png' rel='shortcut icon' />
+</head>
+
+<body id="www-streamie-org"  class="loading">
+    <div id="container-fruid">
+        <div id="header">
+            <h1 id="logo"><a href="#" target="_self" class="i18n">streamie beta for <span id="currentuser-screen_name"></span></a></h1>
+            <div id="meta"><a href="/logout/twitter" class="logout i18n">Logout</a></div>
+            <ul id="mainnav">
+                <li class="activatable rpl"><a href="#mention" class="i18n" title="Mentions" target="_self">@</a></li>
+                <li class="activatable timeline active"><a href="#all" class="i18n" title="Show All" target="_self">⚛</a></li>
+                <li class="activatable rt"><a href="#retweet" class="i18n" title="Retweets" target="_self">♻</a></li>
+                <li class="activatable fv"><a href="#starred" class="i18n" title="Favorites" target="_self">★</a></li>
+                <li class="activatable dm"><a href="#direct" class="i18n" title="Direct Messages" target="_self">✉</a></li>
+                <li class="settings"><a href="#settings" class="i18n" title="Settings" target="_self">⚙</a></li>
+                <li class="add"><a href="#add" class="i18n" title="New Tweet" target="_self">✍</a></li>
+            </ul>
+            
+            <form action="/1/statuses/update.json" method="post" class="status tweet" id="mainstatus">
+                <input type="hidden" name="in_reply_to_status_id" value="" />
+                <input type="hidden" name="lat" value="" />
+                <input type="hidden" name="long" value="" />
+                <input type="hidden" name="display_coordinates" value="" />
+                <fieldset class="addons">
+                    <a href="#" class="directMessage i18n">Direct Message</a>
+                    <a href="#" class="shortenURLs i18n">Shorten URLs</a>
+                    <a href="#" class="attachImage i18n">Attach an Image</a>
+                </fieldset>
+                <fieldset> 
+                    <textarea name="status" rows="5" cols="40" class="i18n" placeholder="Your Tweet…"></textarea>
+                    <span class="characters">0</span> 
+                    <input type="submit" value="Tweet" class="button" />
+                </fieldset>
+            </form>
+            <div id="settings" class="panel"></div>
+        </div>
+        <div id="content">
+            <div class="logo"><img src="images/Candy_logo.png"  width="319" height="257" /></div>
+                <div id="about">
+                    <div class="container">
+				        <p class="point i18n">
+                            大切なツイートだけを、お届けします。
+                        </p>
+				        <p><a href="/auth/twitter" class="inject-hl" target="_self"><img src="https://si0.twimg.com/images/dev/buttons/sign-in-with-twitter-d.png" alt="Sign in with Twitter" /></a></p>
+                    </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-4 col-md-4">
+                            <h2>キュレーション</h2>
+                            <p>キャンディは、全てのツイートを表示する事はしません。今までのTwitterでの行動を分析し、あなたにぴったりのツイートだけで作られたタイムラインをお届けします。</p>
+                        </div>
+                        <div class="col-xs-4 col-md-4">
+                            <h2>学習アルゴリズム</h2>
+                            <p>キャンディは、あなたのことをもっと知りたがっています。使えば使う程、素晴らしいパートナーへと成長していきます。</p>
+                        </div>
+                        <div class="col-xs-4 col-md-4">
+                            <h2>カスタムタイムラインとの同期</h2>
+                            <p>キャンディのタイムラインは、カスタムタイムラインと同期出来ます。あなたに近い趣向をもつユーザに対し、簡単に情報を伝える事が可能です。</p>
+                        </div>
+                    </div>    
+                    <hr>
+                </div>
+                
+                <p class="subline i18n">Yes,this is the open source software.<br>
+                    <a href="https://github.com/YusukeShimizu/Candy">Join us on Github</a>
+                <br>
+                    <a href="https://twitter.com/Bruwbird">Follow us on Twitter</a>
+                </p>
+               
+			   
+			    <footer>
+                    <p>© Bruwbird Corp</p>
+                </footer>
+            </div>
+            <h2 class="h1 i18n">Timeline</h2>
+            <ol id="stream">
+            </ol>
+        </div>
+    </div>
+    <div id="imageUpload" class="popin">
+        <h2 class="h i18n">Image Upload</h2>
+        <div class="msg">
+            <form id="imageUploadForm"><input type="file" name="file"></form>
+            <div class="progress"></div>
+        </div>
+        <div class="buttons">
+            <input type="button" value="Cancel" class="button close i18n" />
+        </div>
+    </div>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="/ext/underscore.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/lib/stream/app.js"></acript>
+</body>
+
 <!--      
      Simplified BSD License
      
@@ -32,148 +145,4 @@
      or implied, of Malte Ubl.
 -->
 
-<head>
-	<title>Candy</title>
-	<meta charset="UTF-8" />
-    <!-- IEでchromeエンジンを起動-->
-	<meta http-equiv="X-UA-Compatible" content="chrome=1" />
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <!-- 呼び出された場合は新規ウィンドウで開く -->
-	<base target="_blank" />
-	<meta name="language" content="en-US" />
-	<link rel="stylesheet" type="text/css" href="css/streamie.less.css" media="screen,projection,print" />
-	<script src="ext/less-1.0.35.min.js"></script>
-	<!-- twitterbootstrap Shimizu-->
-	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <!-- CSSをブラウザによって変換 -->
-	<link rel="stylesheet/less" type="text/css" href="css/streamie.less" media="screen,projection,print" />
-    <!-- CSS用にlessを使用 -->
-	<script src="js/less.js" type="text/javascript"></script>
-	<!-- リロード時のlessファイルのリフレッシュ -->
-	<script>
-	  less.refresh(true); // localstorage caching is bad for frequent releases
-	</script>
-	<!-- jquery最新版を自動利用　-->
-	<script type="text/javascript" src="//www.google.com/jsapi">
-	</script>
-	<script type="text/javascript">
-	  google.load("language", "1");
-	</script>
-    <!-- アドレスバー用のアイコン -->
-	<link href='images/Candy_shortcut.png' rel='shortcut icon' />
-</head>
-
-<!-- id、classによって動作を決定する　-->
-<body id="www-streamie-org"  class="loading">
-	<div id="container-fruid">
-        <!--header idでくくられた場所はログイン時の画面　-->
-		<div id="header">
-			<h1 id="logo"><a href="#" target="_self" class="i18n">streamie beta for <span id="currentuser-screen_name"></span></a></h1>
-			<div id="meta"><a href="/logout/twitter" class="logout i18n">Logout</a></div>
-			<ul id="mainnav">
-				<li class="activatable rpl"><a href="#mention" class="i18n" title="Mentions" target="_self">@</a></li>
-				<li class="activatable timeline active"><a href="#all" class="i18n" title="Show All" target="_self">⚛</a></li>
-				<li class="activatable rt"><a href="#retweet" class="i18n" title="Retweets" target="_self">♻</a></li>
-				<li class="activatable fv"><a href="#starred" class="i18n" title="Favorites" target="_self">★</a></li>
-				<li class="activatable dm"><a href="#direct" class="i18n" title="Direct Messages" target="_self">✉</a></li>
-				<li class="settings"><a href="#settings" class="i18n" title="Settings" target="_self">⚙</a></li>
-				<li class="add"><a href="#add" class="i18n" title="New Tweet" target="_self">✍</a></li>
-			</ul>
-            <!--投稿画面 -->
-			<form action="/1/statuses/update.json" method="post" class="status tweet" id="mainstatus">
-				<input type="hidden" name="in_reply_to_status_id" value="" />
-				<input type="hidden" name="lat" value="" />
-				<input type="hidden" name="long" value="" />
-				<input type="hidden" name="display_coordinates" value="" />
-				<fieldset class="addons">
-					<a href="#" class="directMessage i18n">Direct Message</a>
-					<a href="#" class="shortenURLs i18n">Shorten URLs</a>
-					<a href="#" class="attachImage i18n">Attach an Image</a>
-				</fieldset>
-				<fieldset> 
-					<textarea name="status" rows="5" cols="40" class="i18n" placeholder="Your Tweet…"></textarea>
-					<span class="characters">0</span> 
-					<input type="submit" value="Tweet" class="button" />
-				</fieldset>
-			</form>
-			<div id="settings" class="panel"></div>
-		</div>
-		<div id="content">
-		  <div class="logo"><img src="images/Candy_logo.png"  width="319" height="257" /></div>
-          <!--about idでくくられた場所は否ログイン時の画面　-->
-			<div id="about">
-             <div class="container">
-				<p class="point i18n">
-                    大切なツイートだけを、お届けします。
-                </p>
-				
-				<p><a href="/auth/twitter" class="inject-hl" target="_self"><img src="https://si0.twimg.com/images/dev/buttons/sign-in-with-twitter-d.png" alt="Sign in with Twitter" /></a></p>
-                
-             </div>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-xs-4 col-md-4">
-                            <h2>キュレーション</h2>
-                            <p>キャンディは、全てのツイートを表示する事はしません。今までのTwitterでの行動を分析し、あなたにぴったりのツイートだけで作られたタイムラインをお届けします。</p>
-                        </div>
-                        <div class="col-xs-4 col-md-4">
-                            <h2>学習アルゴリズム</h2>
-                            <p>キャンディは、あなたのことをもっと知りたがっています。使えば使う程、素晴らしいパートナーへと成長していきます。</p>
-                        </div>
-                        <div class="col-xs-4 col-md-4">
-                            <h2>カスタムタイムラインとの同期</h2>
-                            <p>キャンディのタイムラインは、カスタムタイムラインと同期出来ます。あなたに近い趣向をもつユーザに対し、簡単に情報を伝える事が可能です。</p>
-                        </div>
-                    </div>    
-                    <hr>
-                </div>
-                
-				<p class="subline i18n">Yes,this is the open source software.<br>
-                    <a href="https://github.com/YusukeShimizu/Candy">Join us on Github</a>
-                <br>
-					<a href="https://twitter.com/Bruwbird">Follow us on Twitter</a>
-                </p>
-               
-			   
-			    <footer>
-                	<p>© Bruwbird Corp</p>
-                </footer>
-			</div>
-            <!-- タイムラインの表示 -->
-			<h2 class="h1 i18n">Timeline</h2>
-			<ol id="stream">
-			</ol>
-		</div>
-	</div>
-	<div id="imageUpload" class="popin">
-		<h2 class="h i18n">Image Upload</h2>
-		<div class="msg">
-			<form id="imageUploadForm"><input type="file" name="file"></form>
-			<div class="progress"></div>
-		</div>
-		<div class="buttons">
-			<input type="button" value="Cancel" class="button close i18n" />
-		</div>
-	</div>
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-	<!-- twitterbootstrap-->
-	<script src="bootstrap/js/bootstrap.min.js"></script>
-	
-	<script src="/ext/underscore.js"></script>
-	<!-- We use require.js for loading dependencies http://requirejs.org/ -->
-  <script src="ext/require.js"></script>
-  <script>
-    require({
-      baseUrl: "/",
-      paths: {
-        "stream": "/lib/stream"
-      },
-    },
-    ["stream/app"],
-      function(app) {
-        app.start();
-      }
-    );
-  </script>
-</body> 
 </html>

@@ -10,12 +10,13 @@ var path = require('path');
 
 var app = express();
 
-//追加モジュールのロード
+//load added modules
 var config = require('./lib/config.js').config;
 var setting = require('./lib/setting');
 var viewController = require('./lib/viewController');
+var connect = require('./lib/connect');
 
-//node_moduleのセットアップ
+//setup node_module
 setting.init(app,config);
 
 // all environments
@@ -43,12 +44,15 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/users', user.list);
 
-//コントローラのセットアップ
-viewController.init(app,setting.passport);
+//setup viewcontroller
+viewController.init(app,setting.passport,connect);
 
 server = http.createServer(app);
 
 server.listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));
 });
+
+//start event based communication
+connect.init(server);
 
