@@ -16,7 +16,7 @@ var setting = require('./lib/setting');
 var viewController = require('./lib/viewController');
 var connect = require('./lib/connect');
 
-//setup node_module
+//node_modules environments
 setting.init(app,config);
 
 // all environments
@@ -28,10 +28,11 @@ app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
-app.use(express.cookieParser('your secret here'));
+
+//validate session middleware
+app.use(express.cookieParser(config.MEMORY_STORE));
 app.use(express.session());
-app.use(express.cookieParser());
-app.use(express.session({secret: config.MEMORY_STORE}));
+setting.session(app);
 
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
@@ -45,7 +46,7 @@ app.get('/', routes.index);
 app.get('/users', user.list);
 
 //setup viewcontroller
-viewController.init(app,setting.passport,connect);
+viewController.init(app,connect,setting.passport);
 
 server = http.createServer(app);
 
@@ -53,6 +54,6 @@ server.listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));
 });
 
-//start event based communication
+//event based communication using socket.io
 connect.init(server);
 

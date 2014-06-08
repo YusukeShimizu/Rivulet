@@ -8,6 +8,5 @@
         socket.on('message', connect);
     }
     window.client = client;
-
 })();
 
