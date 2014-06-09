@@ -18,7 +18,7 @@
     <script>
         less.refresh(true); // localstorage caching is bad for frequent releases
     </script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script type="text/javascript" src="//www.google.com/jsapi">
     </script>
     <link href='images/Candy_shortcut.png' rel='shortcut icon' />
@@ -110,13 +110,22 @@
             <input type="button" value="Cancel" class="button close i18n" />
         </div>
     </div>
-    <script src="bootstrap/js/bootstrap.min.js"></script>
     <script src="/ext/underscore.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/lib/stream/candy.js"></script>
     <script src="/lib/stream/client.js"></script>
-    <script src="/lib/stream/initplugins.js"></script>
-</body>
+    <script src="/lib/stream/initplugins.js"></script> 
+    <script src="/lib/stream/settingsDialog.js"></script>
+
+    <!-- Candy use require.js for loading dependencies http://requirejs.org/ --> 
+    <!-- templates -->
+    <script type="text/html" id="settingDialog_template">
+        <div><%=helpers%>
+                </div>  
+    </script> 
+     
+    </body>
 
 <!--      
      Simplified BSD License

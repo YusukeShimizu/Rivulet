@@ -7,21 +7,29 @@
 //The immediate function pattern to make modules 
 (function(){
     var candy = {};
+    var initial = true;
 
     candy.start = (function(){
         //using jquery
         $(function(){
-            // initPlugins are loaded when the page is loaded
-            initplugins.init();
-
             var connect = function(data){
                 //data always be JSON
                 data = JSON.parse(data);
-                //if login, candy start the twitter
+                //user is now connected and authorization was fine
                 if(data.action == "auth_OK"){
                     console.log(data)
                     $("#about").hide();
                     $("#header").show();
+                    if(initial){
+                        initial = false;
+                        // initPlugins are loaded when the page is loaded
+                        // use method without object
+                        jQuery.each(initplugins,function(key,plugin){
+                            plugin.call(function(){},plugin);
+                        });
+                    }
+                    //init settingsdialog
+                    settingsDialog.init();
                 }
                 else{
                 }
@@ -30,7 +38,4 @@
             var socket = client.connect(connect);
         })
     })()
-
-    // set namespace to global object 
-    window.candy = candy;
 })()

@@ -4,23 +4,27 @@
 
 (function(){
     var initplugins = {};
-
-    // click item activate
-    function navigation(){
-        // Logout button
-        $("#meta").delegate(".logout", "click", function (e) {
-            //Cancel only the default action by using .preventDefault().
-            e.preventDefault();
-            //connect server
-            client.send({
-                action: "logout" 
+    
+    initplugins = {
+        // click item activate
+        navigation: function navigation(plugin){
+            // mainstatus 
+            $("#mainstatus").on("close",function(){
+                if($("#mainstatus").hasclass("show")){
+                    $("#mainstatus").removeClass("show");
+                }
             });
-            location.reload();
-        });
-    }
-
-    initplugins.init = function(){
-        navigation();
+            // Logout button
+            $("#meta").delegate(".logout", "click", function (e) {
+                //Cancel only the default action
+                e.preventDefault();
+                //connect server
+                client.send({
+                    action: "logout" 
+                });
+                location.reload();
+            });
+        }
     }
     window.initplugins = initplugins;
 })()
