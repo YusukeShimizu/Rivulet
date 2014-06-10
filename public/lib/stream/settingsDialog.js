@@ -1,18 +1,49 @@
-/* 
- *  list of Module for setting dialog
- */
+// setting for setting dialog
 
 (function(){
-    var settingsDialog = {};    
+    var settingsDialog = {}; 
+    //use underscore.js
+    var template = _.template(templates.test);
+    var visible = false;
+    
+    function hide(){
+        visible = false;
+        $("#settings").removeClass("show");
+    }
 
-    settingsDialog.init = function(){
-        var $template = $('#settingDialog_template').html()
-        var template = _.template($template);
+    function show(){
+        visible = true;
+        $("#settings").addClass("show");
+        var test =  $("#settings").addClass("show");
+    }
+
+    function draw(){
         var html = template({
             helpers: "helpers"
         });
-        
+        //set inner html
         $("#settings").html(html);
     }
+    //when the settings change
+    $(document).on("setting:set", function(){
+        if(visible){
+            draw();
+        }
+    });
+
+    settingsDialog.init = function bind(){
+        // a is child  
+        $("#header").on("click",".settings > a", function(e){
+            //avoid original event
+            e.preventDefault();   
+            if(visible){
+                hide();
+            }else{
+                draw();
+                show();
+            }
+        });
+    }
+
     window.settingsDialog = settingsDialog;
 })()
