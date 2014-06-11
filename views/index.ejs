@@ -10,16 +10,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <base target="_blank" />
     <meta name="language" content="en-US" />
-    <link rel="stylesheet" type="text/css" href="css/streamie.less.css" media="screen,projection,print" />
-    <script src="ext/less-1.0.35.min.js"></script>
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet/less" type="text/css" href="css/streamie.less" media="screen,projection,print" />
-    <script src="js/less.js" type="text/javascript"></script>
+    <link rel="stylesheet/less" type="text/css" href="css/streamie.less" media="screen,projection,print" /> 
+    <script type="text/javascript" src="js/scriptsLoader.js"></script>
     <script>
-        less.refresh(true); // localstorage caching is bad for frequent releases
-    </script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script type="text/javascript" src="//www.google.com/jsapi">
+        scriptsLoader.header();
     </script>
     <link href='images/Candy_shortcut.png' rel='shortcut icon' />
 </head>
@@ -110,16 +105,10 @@
             <input type="button" value="Cancel" class="button close i18n" />
         </div>
     </div>
-    <script src="/ext/underscore.js"></script>
-    <script src="bootstrap/js/bootstrap.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/lib/stream/candy.js"></script>
-    <script src="/lib/stream/client.js"></script>
-    <script src="/lib/stream/initplugins.js"></script> 
-    <script src="/template/templates.js"></script>
-    <script src="/lib/stream/settingsDialog.js"></script> 
-</body>
-
+    <script>
+        scriptsLoader.body();
+    </script>
+    
 <!--      
      Simplified BSD License
      
