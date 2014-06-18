@@ -5,11 +5,11 @@
     templates.settingsDialog =  
         "<% var h = helpers.html; %>"
             + "<form id='settingsForm' action='#'>"
-                + "<h2 class='h3'><%= h(text('setting', 'Settings')) %></h2>"
+                + "<h2 class='h3'><%= h('Settings') %></h2>"
                 + "<div class='namespaces'>"
                     + "<% settings.namespaces().forEach(function (ns) { %>"
                     + "<fieldset>"
-                        + "<legend class='h4'><%=h(text('setting', ns.name))%></legend>"
+                        + "<legend class='h4'><%=h(ns.name)%></legend>"
                         + "<% ns.keys().sort(function(a,b) { return ns.settings[b].label < ns.settings[a].label  }).forEach(function (key) { %>"
                         + "<% var value = settings.get(ns.name, key), name  = 'settings.'+ns.name+'.'+key; %>"
                         + "<% var values = ns.settings[key].values; %>"
@@ -26,15 +26,16 @@
                             + "<% }else{ %>"
                                 + "<% console.assert(false); %>"
                             + "<% } %>"
-                            + "<%= h(text('setting', ns.settings[key].label)) %>"
+                            + "<%= h(ns.settings[key].label) %>"
                         + "</label>"			
                         + "</div>"
                         + "<% });%>"
                     + "</fieldset>"
                     + "<% }); %>"
                 + "</div>"
-                + "<input type='button' value='<%= h(text(¥'setting¥', ¥'Close¥')) %>' class='button close'>"
+                + "<input type='button' value='<%= h(¥'Close¥') %>' class='button close'>"
            + "</form>";
-    templates.test =  "<%= helpers %>";
+
+    templates.test =  "<% var h = helpers.html; %>" + "<h2 class='h3'><%= h('Settings') %></h2>";
     window.templates = templates;
 })()

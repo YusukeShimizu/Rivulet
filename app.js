@@ -3,18 +3,18 @@
  */
 
 var express = require('express');
-var routes = require('./routes');
-var user = require('./routes/user');
+var routes = require(__dirname + '/routes');
+var user = require(__dirname + '/routes/user');
 var http = require('http');
 var path = require('path');
 
 var app = express();
 
 //load added modules
-var config = require('./lib/config.js').config;
-var setting = require('./lib/setting');
-var viewController = require('./lib/viewController');
-var connect = require('./lib/connect');
+var config = require(__dirname + '/lib/config.js').config;
+var setting = require(__dirname + '/lib/setting');
+var viewController = require(__dirname + '/lib/viewController');
+var connect = require(__dirname + '/lib/connect');
 
 //node_modules environments
 setting.init(app,config);
