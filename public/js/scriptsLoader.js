@@ -14,6 +14,7 @@
         //socket.ioÅ@version0.9.16(http://socket.io/)
         document.write('<script src="/socket.io/socket.io.js"></script>');
         //all modules
+        document.write('<script src="/lib/stream/settings.js"></script>');
         document.write('<script src="/lib/stream/client.js"></script>');
         document.write('<script src="/lib/stream/initplugins.js"></script>');
         document.write('<script src="/template/templates.js"></script>');

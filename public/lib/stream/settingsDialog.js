@@ -4,7 +4,7 @@
     var settingsDialog = {}; 
     //use underscore.js
     var test =templates.settingsDialog; 
-    var template = _.template(templates.test);
+    var template = _.template(templates.settingsDialog);
     var visible = false;
     
     function hide(){
@@ -20,9 +20,8 @@
 
     function draw(){
         var html = template({
-            //settings: settings,
+            settings: settings,
             helpers: helpers
-            //text:text.get
         });
         //set inner html
         $("#settings").html(html);
