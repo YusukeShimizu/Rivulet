@@ -27,7 +27,7 @@
         $("#settings").html(html);
     }
     //when the settings change
-    $(document).on("setting:set", function(){
+    $(document).bind("settings:set", function(){
         if(visible){
             draw();
         }
@@ -47,7 +47,7 @@
         });
 
         // listen for changes on the settings
-        $("#header").on("change","#settingForm input.setting,#settingsForm select.setting",function(){
+        $("#header").on("change","#settingsForm input.setting,#settingsForm select.setting",function(){
             var input = $(this);
             var name = this.name;
             var checked = input.is(":checkbox") ? this.checked: input.val();

@@ -42,7 +42,7 @@
     }
 
     //init settings from localStorage
-    (function init(){
+    function init(){
         if(settingsData){
             return;
         }
@@ -57,7 +57,9 @@
             console.log("need localStorage");
             settingsData = {};
         }
-    })()
+    }
+
+    init();
 
     //register a namespace for UI
     settings.registerNamespace = function(name,label){
@@ -104,7 +106,7 @@
     settings.get = function(namespace,key){
         //return settings
         if(namespace in settingsData && key in settingsData[namespace]){
-            return settings[namespace][key];
+            return settingsData[namespace][key];
         }
         //return defaultValue
         if(namespace in defaultSettings && key in defaultSettings[namespace].settingsData){
@@ -119,7 +121,7 @@
     settings.set = function(namespace,key,value){
         var ns = settingsData[namespace];
         if(!ns){
-            ns = settings[namespace] = {};
+            ns = settingsData[namespace] = {};
         }
         ns[key] = value;
         notify(namespace,key,value);
