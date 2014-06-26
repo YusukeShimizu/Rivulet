@@ -1,7 +1,7 @@
 /*
- * Main entry point for candy
+ * Main entry point for this app
  * "start" method gets called when the initial dependencies are loaded.
- * Candy always have jQuery and underscore.js everwhere
+ * I always have jQuery and underscore.js everwhere
  */
 
 //The immediate function pattern to make modules 
@@ -27,9 +27,11 @@
                         jQuery.each(initplugins,function(key,plugin){
                             plugin.call(function(){},plugin);
                         });
+                        //init settingsdialog
+                        settingsDialog.init();
+                        //notify any settings
+                        $(document).trigger("streamie:init:complete");
                     }
-                    //init settingsdialog
-                    settingsDialog.init();
                 }
                 else{
                 }
