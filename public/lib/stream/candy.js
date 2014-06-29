@@ -8,6 +8,8 @@
 (function(){
     var candy = {};
     var initial = true;
+    var stream = new tweetstream.Stream(settings);
+    stream.addPlugins(streamPlugins);
 
     candy.start = (function(){
         //using jquery
@@ -16,6 +18,7 @@
                 //data always be JSON
                 data = JSON.parse(data);
                 //user is now connected and authorization was fine
+                stream.user = data.info;
                 if(data.action == "auth_OK"){
                     console.log(data)
                     $("#about").hide();
@@ -25,7 +28,7 @@
                         // initPlugins are loaded when the page is loaded
                         // use method without object
                         jQuery.each(initplugins,function(key,plugin){
-                            plugin.call(function(){},plugin);
+                            plugin.call(function(){},stream,plugin);
                         });
                         //init settingsdialog
                         settingsDialog.init();

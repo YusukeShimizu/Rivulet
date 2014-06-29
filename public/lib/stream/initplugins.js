@@ -33,6 +33,10 @@
                 });
                 location.reload();
             });
+        },
+        personalizeForCurrentUser: function personalizeForCurrentUser (stream) {
+            //display screenname
+            $("#currentuser-screen_name").text("@"+stream.user.screen_name)
         }
     }
     window.initplugins = initplugins;
