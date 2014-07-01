@@ -8,6 +8,8 @@
 (function(){
     var candy = {};
     var initial = true;
+    var template = {tweet: ""};
+    window.template = template;
     var stream = new tweetstream.Stream(settings);
     stream.addPlugins(streamPlugins);
 
@@ -34,9 +36,14 @@
                         settingsDialog.init();
                         //notify any settings
                         $(document).trigger("streamie:init:complete");
+                        window.template = data.templates;
                     }
-                }
-                else{
+                }else if(data.tweet){
+                    // We actually received a tweet. Let the stream process it
+                    var data = data.tweet;
+                    stream.process(data);
+                }else{
+                    console.log(data);
                 }
             }
             //connect to the backend system
