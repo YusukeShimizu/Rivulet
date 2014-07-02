@@ -3,7 +3,7 @@
  */
 
 (function(){
-    var initplugins = {};
+    var initPlugins = {};
    
     //register settings
     settings.registerNamespace("general", "General");
@@ -39,5 +39,5 @@
             $("#currentuser-screen_name").text("@"+stream.user.screen_name)
         }
     }
-    window.initplugins = initplugins;
+    window.initPlugins = initPlugins;
 })()

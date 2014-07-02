@@ -11,35 +11,25 @@
     settings.registerKey("stream", "keepScrollState", "Keep scroll level when new tweets come in",  true); 
 
     var streamPlugins = {};
-    var template = {};
     //set the template
     streamPlugins = {
-        template: {
-            func: function renderTemplate(tweet,stream){
-                tweet.template = _.template(template.tweet);
-                this();
-            }
+        template: function renderTemplate(tweet,stream){
+            tweet.template = _.template(templates.tweet);
         },
-        renderTemplate: {
-            func: function renderTemplate(tweet,stream){
-                tweet.html = tweet.template({
-                    stream: stream,
-                    tweet: tweet,
-                    helpers: helpers
-                });
-                this();
-            }
+        renderTemplate: function renderTemplate(tweet,stream){
+            tweet.html = tweet.template({
+                stream: stream,
+                tweet: tweet,
+                helpers: helpers
+            });
         },
         //put the tweet into the stream
-        prepend: {
-            func: function prepend(tweet,stream){
-                var previous_node = tweet.node;
-                tweet.node = $(tweet.html);
-                //give access
-                tweet.node.data("tweet",tweet);
-                stream.canvas().prpend(tweet.node);
-                this();
-            }
+        prepend: function prepend(tweet,stream){
+            var previous_node = tweet.node;
+            tweet.node = $(tweet.html);
+            //give access
+            tweet.node.data("tweet",tweet);
+            stream.canvas().prpend(tweet.node);
         }
     }
     window.streamPlugins = streamPlugins;

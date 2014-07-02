@@ -11,13 +11,12 @@ var path = require('path');
 var app = express();
 
 //load added modules
-var config = require(__dirname + '/lib/config.js').config;
 var setting = require(__dirname + '/lib/setting');
-var viewController = require(__dirname + '/lib/viewController');
+var router = require(__dirname + '/lib/router');
 var connect = require(__dirname + '/lib/connect');
 
 //node_modules environments
-setting.init(app,config);
+setting.init();
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -30,7 +29,7 @@ app.use(express.urlencoded());
 app.use(express.methodOverride());
 
 //validate session middleware
-app.use(express.cookieParser(config.MEMORY_STORE));
+app.use(express.cookieParser("cookieParser"));
 app.use(express.session());
 setting.session(app);
 
@@ -45,8 +44,8 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/users', user.list);
 
-//setup viewcontroller
-viewController.init(app,connect,setting.passport);
+//setup router
+router.init(app,connect,setting);
 
 server = http.createServer(app);
 
@@ -56,4 +55,3 @@ server.listen(app.get('port'), function(){
 
 //event based communication using socket.io
 connect.init(server);
-
