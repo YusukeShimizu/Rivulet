@@ -19,6 +19,16 @@
             user_id:null
         },
 
+        // register more plugins for stream processing
+        addPlugins: function (plugins) {
+            this.plugins.push.apply(this.plugins, plugins);
+        },
+          
+        // register more plugins for link processing
+        addLinkPlugins: function (plugins) {
+            this.linkPlugins.push.apply(this.linkPlugins, plugins);
+        },
+
         //the newest tweet user ever seen
         newestTweet: function(newID){
             if(newID){
@@ -34,10 +44,18 @@
         },
 
         //go through the list of plugins for a tweet
-        process: function(tweet){
-            jQuery.each(streamPlugins,function(key,plugin){
-                plugin.call(function(){},tweet,plugin);
-            });
+        //this process anable asynchronous things while processing a tweet
+        process: function (tweet) {
+            var that = this;
+            var i = 0;
+            function next () {
+                var plugin = that.plugins[i++];
+                if(plugin) {
+                    plugin.func.displayName = plugin.name;
+                    plugin.func.call(next, tweet, that, plugin)
+                }
+            }
+            next();
         },
 
         reprocess: function(tweet){

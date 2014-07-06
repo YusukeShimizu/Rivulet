@@ -3,7 +3,6 @@
  */
 
 (function(){
-    var initPlugins = {};
    
     //register settings
     settings.registerNamespace("general", "General");
@@ -14,30 +13,37 @@
     settings.registerKey("notifications", "direct", "Notify for new direct messages (blue icon)",  true);
     settings.registerKey("notifications", "sound", "Play a sound for new tweets",  false);
 
-    initplugins = {
+    var plugins = {
         // click item activate
-        navigation: function navigation(plugin){
-            // mainstatus 
-            $("#mainstatus").on("close",function(){
-                if($("#mainstatus").hasclass("show")){
-                    $("#mainstatus").removeClass("show");
-                }
-            });
-            // Logout button
-            $("#meta").delegate(".logout", "click", function (e) {
-                //Cancel only the default action
-                e.preventDefault();
-                //connect server
-                client.send({
-                    action: "logout" 
+        navigation: {
+            func: function navigation(plugin){
+                // mainstatus 
+                $("#mainstatus").on("close",function(){
+                    if($("#mainstatus").hasclass("show")){
+                        $("#mainstatus").removeClass("show");
+                    }
                 });
-                location.reload();
-            });
+                // Logout button
+                $("#meta").delegate(".logout", "click", function (e) {
+                    //Cancel only the default action
+                    e.preventDefault();
+                    //connect server
+                    client.send({
+                        action: "logout" 
+                    });
+                    location.reload();
+                });
+            }
         },
-        personalizeForCurrentUser: function personalizeForCurrentUser (stream) {
-            //display screenname
-            $("#currentuser-screen_name").text("@"+stream.user.screen_name)
+        personalizeForCurrentUser: {
+            func: function personalizeForCurrentUser (stream) {
+                //display screenname
+                $("#currentuser-screen_name").text("@"+stream.user.screen_name);
+            }
         }
     }
-    window.initPlugins = initPlugins;
+    window.initPlugins = [
+        plugins.navigation,
+        plugins.personalizeForCurrentUser
+    ];
 })()

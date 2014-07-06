@@ -11,8 +11,15 @@
     var stream = new tweetstream.Stream(settings);
 
     candy.start = (function(){
+
         //using jquery
         $(function(){
+            //stream use plugins with asynchronous way
+            stream.addPlugins(streamPlugins);
+            //stream.addLinkPlugins(linkPlugins);
+            //App don't maintain any important state
+            location.hash = "";
+
             var connect = function(data){
                 //data always be JSON
                 data = JSON.parse(data);
@@ -26,8 +33,8 @@
                         initial = false;
                         // initPlugins are loaded when the page is loaded
                         // use method without object
-                        jQuery.each(initPlugins,function(key,plugin){
-                            plugin.call(function(){},stream,plugin);
+                        initPlugins.forEach(function(plugin){
+                            plugin.func.call(function(){},stream,plugin);
                         });
                         //allocate templates
                         window.templates = data.templates;
@@ -36,7 +43,7 @@
                         //notify any settings
                         $(document).trigger("streamie:init:complete");
                     }
-                }else if(data.tweet.text){
+                }else if(data.tweet){
                     // We actually received a tweet. Let the stream process it
                     var data = data.tweet;
                     stream.process(data);
