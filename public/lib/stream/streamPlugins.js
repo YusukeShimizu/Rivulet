@@ -62,7 +62,7 @@
                 tweet.node = $(tweet.html);
                 //give access
                 tweet.node.data("tweet",tweet);
-                stream.canvas().prpend(tweet.node);
+                stream.canvas().prepend(tweet.node);
                 this();
             }
         },
