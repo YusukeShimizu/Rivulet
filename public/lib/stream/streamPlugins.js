@@ -45,6 +45,16 @@
                 this();
             }
         },
+        //to avoid xss atacks
+        htmlEncode: {
+            func: function htmlEncode (tweet, stream, plugin) {
+                var text = tweet.text;
+                text = helpers.htmlDecode(text);
+                text = helpers.htmlEncode(text);
+                tweet.textHTML = text;
+                this();
+            }
+        },
         renderTemplate: {
             func: function renderTemplate(tweet,stream){
                 tweet.html = tweet.template({
@@ -68,7 +78,7 @@
         },
         //render image to canvas
         canvasImage: {
-            func: function canvasImage (image){
+            func: function canvasImage (tweet){
                 tweet.node.find('canvas[data-src]').each(function(){
                     var canvas = this;
                     var src = canvas.getAttribute('data-src');
@@ -87,7 +97,9 @@
         plugins.handleRetweet,
         plugins.tweetsOnly,
         plugins.template,
+        plugins.htmlEncode,
         plugins.renderTemplate,
-        plugins.prepend
+        plugins.prepend,
+        plugins.canvasImage
     ];
 })()

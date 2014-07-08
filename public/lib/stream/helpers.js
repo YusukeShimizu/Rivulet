@@ -20,6 +20,11 @@
         return text;
     }
 
+    var DE_GT_RE = /\&gt\;/g;
+    var DE_LT_RE = /\&lt\;/g;
+    var DE_QUOT_RE = /\&quot\;/g;
+    var DE_SINGLE_RE = /\&#39\;/g;
+
     helpers.htmlDecode = function htmlDecode(text){
         text = ""+text;
         text = text.toString().replace(DE_GT_RE, ">");

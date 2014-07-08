@@ -18,7 +18,6 @@
         document.write('<script src="/lib/stream/client.js"></script>');
         document.write('<script src="/lib/stream/initplugins.js"></script>');
         document.write('<script src="/lib/stream/streamPlugins.js"></script>');
-        document.write('<script src="/template/templates.js"></script>');
         document.write('<script src="/lib/stream/settingsDialog.js"></script> ');
         document.write('<script src="/lib/stream/helpers.js"></script>');
         document.write('<script src="/lib/stream/tweetstream.js"></script>');
