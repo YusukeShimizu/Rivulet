@@ -6,11 +6,11 @@
 
 //The immediate function pattern to make modules 
 (function(){
-    var candy = {};
+    var stream = {};
     var initial = true;
     var stream = new tweetstream.Stream(settings);
 
-    candy.start = (function(){
+    stream.start = (function(){
 
         //using jquery
         $(function(){
@@ -24,11 +24,14 @@
                 //data always be JSON
                 data = JSON.parse(data);
                 //user is now connected and authorization was fine
-                stream.user = data.info;
                 if(data.action == "auth_OK"){
                     console.log(data)
                     $("#about").hide();
                     $("#header").show();
+                    $(document).bind("tweet:first", function () {
+                        $("#content .logo").hide();
+                    });
+                    stream.user = data.info;
                     if(initial){
                         initial = false;
                         // initPlugins are loaded when the page is loaded
@@ -45,8 +48,9 @@
                     }
                 }else if(data.tweet){
                     // We actually received a tweet. Let the stream process it
-                    var data = data.tweet;
-                    stream.process(data);
+                    var tweet = {};
+                    tweet.data = data.tweet;
+                    stream.process(tweet);
                 }else{
                     console.log(data);
                 }

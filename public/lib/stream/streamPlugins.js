@@ -14,10 +14,10 @@
         //turns retweet into something similar to tweets
         handleRetweet: {
             func: function handleRetweet(tweet){
-                if(tweet.retweeted_status){
+                if(tweet.data.retweeted_status){
                     if(settings.get("stream","showRetweets")){
-                        var orig = tweet;
-                        tweet.data = tweet.retweeted_status;
+                        var orig = tweet.data;
+                        tweet.data = tweet.data.retweeted_status;
                         tweet.retweet = orig;
                     }else{
                         console.log(JSON.stringify(tweet,null," "));
@@ -30,8 +30,12 @@
         // only show tweet, though streaming api send any oher kind of data
         tweetsOnly: {
             func: function tweetsOnly(tweet,stream){
-                if(tweet.text != null){
-                    tweet.created_at = new Date(tweet.created_at);
+                if(tweet.data.text != null){
+                    if(stream.count == 0) {
+                        $(document).trigger("tweet:first");
+                    }
+                    stream.count++;
+                    tweet.created_at = new Date(tweet.data.created_at);
                     this();
                 }else{
                 }
@@ -48,7 +52,7 @@
         //to avoid xss atacks
         htmlEncode: {
             func: function htmlEncode (tweet, stream, plugin) {
-                var text = tweet.text;
+                var text = tweet.data.text;
                 text = helpers.htmlDecode(text);
                 text = helpers.htmlEncode(text);
                 tweet.textHTML = text;

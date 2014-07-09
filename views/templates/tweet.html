@@ -1,7 +1,7 @@
 <% var h = helpers.html; %>
 	<li class="tweet<%= tweet.retweet ? ' retweet' : ''%>">
-		<a href = "http://twitter.com/<%= h(tweet.user.screen_name) %>" class="user-href">
-			<canvas data-src="<%= h(tweet.user.profile_image_url_https) %>" alt="<%= h(tweet.user.name) %>" width="48" height="48" class="profile_image_url" />
+		<a href = "http://twitter.com/<%= h(tweet.data.user.screen_name) %>" class="user-href">
+			<canvas data-src="<%= h(tweet.data.user.profile_image_url_https) %>" alt="<%= h(tweet.data.user.name) %>" width="48" height="48" class="profile_image_url" />
 		</a>
 		<% if(tweet.retweet) { %>
 			<a href="http://twitter.com/<%= h(tweet.retweet.user.screen_name) %>" class="retweet-user-href-icon">
@@ -20,7 +20,7 @@
 			<div class = "header">
                 <h3 class="h user-name">
                     <a href="http://twitter.com/<%= h(tweet.data.user.screen_name) %>" class="user-href">
-                        @<%= tweet.user.screen_name+" ("+tweet.user.name+")" %>
+                        @<%= tweet.data.user.screen_name+" ("+tweet.data.user.name+")" %>
                     </a>
 					<% if(tweet.retweet) { %> 
 						via
@@ -30,7 +30,7 @@
 					<% }%>
 				</h3>
 				<div class="time created_at">
-					<a href="<%= h('http://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id)%>">
+					<a href="<%= h('http://twitter.com/'+tweet.data.user.screen_name+'/status/'+tweet.id)%>">
 					</a>
 				</div>
 			</div>
