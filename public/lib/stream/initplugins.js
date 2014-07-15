@@ -24,11 +24,11 @@
                     var val = location.hash.replace(/^\#/, "");
                     $("body").attr("class",val);
                     var scrollState = plugin.ScrollState[val || "all"];
-                    if(scrollState) != null){
+                    if(scrollState != null){
                         win.scrollTop(scrollState);
                     }
-                    if(!plugin.StyleAppended[val] && val != "all") {
-                        plugin.StyleAppended[val] = true;
+                    if(!plugin.StyleAppend[val] && val != "all") {
+                        plugin.StyleAppend[val] = true;
                         var className = val.replace(/[^\w-]/g, "");
                         // to hide everything besides things tagged with the current state
                         var style = '<style type="text/css" id>'+
@@ -39,7 +39,7 @@
                         $("head").append(style);
                     }
                 }   
-                win.bind("hashchange", change);
+                win.bind('hashchange', change);
                 change();
                 var scrollTimer;
                 function scrollTimeout() {

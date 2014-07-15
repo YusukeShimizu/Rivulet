@@ -22,10 +22,10 @@
     function _connect(cb){
         // socket.io is loaded in page
         var socket = io.connect('http://localhost');
-        socket.on('message', connect);
-
+        
         var failed = false;
         var connected = true;
+        var info;
 
         //always use JSON
         function send(data){
@@ -35,6 +35,9 @@
         client.send = function(data){
             send(data);
         }
+        // immediately after connect, send the user info
+        send(info);
+        socket.on('message', cb);
 
         socket.on('message', function (msg) {
             if(failed) {
@@ -42,10 +45,11 @@
                 return;
             }
             var data = JSON.parse(msg);
-            if(data == "pong") {
+            if(data.action == "pong") {
                 // we have a successful connection
                 connectFail = -1; 
                 connected = true;
+                info = data.info;
             }
             else if(data.message) {
                 failed = true;
@@ -59,7 +63,7 @@
                     clearInterval(interval);
                     socket.disconnect();
                     console.log("[Connect] Reconnecting after error "+streamFailCount);
-                    connect(cb);
+                    client.connect(cb);
                 }, 1000 * (++streamFailCount))
             }
         });
@@ -78,15 +82,17 @@
                     connectFail++;
                     socket.disconnect(); 
                     console.log("[Connect] Reconnecting after connection failure");
-                    connect(cb);
+                    client.connect(cb);
                 }
             }, 3000)
         }
         if(interval) {
             clearInterval(interval);
         }
-        interval = setInterval(ping, 5000);
-        ping();
+        if(!info){
+            interval = setInterval(ping, 5000);
+            ping();
+        }
     }
 
     window.client = client;
