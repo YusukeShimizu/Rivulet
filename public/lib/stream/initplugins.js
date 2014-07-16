@@ -64,7 +64,7 @@
                     }
                 });
                 // Logout button
-                $("#meta").delegate(".logout", "click", function (e) {
+                $("#meta").on("click",".logout",function (e) {
                     //Cancel only the default action
                     e.preventDefault();
                     //connect server
@@ -72,6 +72,33 @@
                         action: "logout" 
                     });
                     location.reload();
+                });
+                // main header
+                $("#header").on("click","#mainnav a",function(e){
+                    var a = $(this);
+                    a.blur();
+                    var li = a.closest("li");
+                    // special case for new tweet
+                    if(li.hasClass("add")) { 
+                        e.preventDefault();
+                        if($("#mainstatus").hasClass("show")) {
+                            $("#mainstatus").removeClass("show");
+                        } else {
+                            $("#mainstatus").addClass("show");
+                            // Needs to be aligned after the .slide transition. Setting focus immeditately
+                            // delays the transition by about 2 seconds in Chrome.
+                            setTimeout(function() {
+                                $("#mainstatus").find("[name=status]").focus();
+                            }, 500); 
+                        }
+                    }
+                    if(li.hasClass("activatable")) { 
+                        a.closest("#mainnav").find("li").removeClass("active");
+                        li.addClass("active")
+                    }
+                    $("#mainstatus").bind("status:send", function () {
+                        $("#mainstatus").removeClass("show");
+                    });
                 });
             }
         },
