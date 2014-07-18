@@ -41,7 +41,22 @@
                 }
             }
         },
-
+        // find all mentions in a tweet. set tweet.mention to true 
+        mentions : {
+            regex: /(^|\W)\@([a-zA-Z0-9_]+)/g,
+            func : function mentions (tweet,stream,plugin){
+                var screen_name = stream.user.screen_name;
+                tweet.mentions = [];
+                tweet.data.text.replace(plugin.regex,function(match,pre,name){
+                    if(name == screen_name){
+                        tweet.mentioned = true;
+                    }
+                    tweet.mentions.push(name);
+                    return match;
+                });
+                this();
+            }
+        },
         //set the template
         template: {
             func: function template(tweet,stream){
@@ -100,6 +115,7 @@
     window.streamPlugins = [
         plugins.handleRetweet,
         plugins.tweetsOnly,
+        plugins.mentions,
         plugins.template,
         plugins.htmlEncode,
         plugins.renderTemplate,

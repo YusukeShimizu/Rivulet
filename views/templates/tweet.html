@@ -1,5 +1,5 @@
 <% var h = helpers.html; %>
-	<li class="tweet<%= tweet.retweet ? ' retweet' : ''%>">
+	<li class="tweet<%= tweet.retweet ? ' retweet' : ''%><%= tweet.mentioned ? ' mention' : ''%>">
 		<a href = "http://twitter.com/<%= h(tweet.data.user.screen_name) %>" class="user-href">
 			<canvas data-src="<%= h(tweet.data.user.profile_image_url_https) %>" alt="<%= h(tweet.data.user.name) %>" width="48" height="48" class="profile_image_url" />
 		</a>
