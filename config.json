@@ -2,7 +2,7 @@
   "hostNameAndOptionalPort": "streamie.com:8888",
   "TWITTER_CONSUMER_KEY": "GfuY2Rjy3v2pI7RkUUmnQ",
   "TWITTER_CONSUMER_SECRET": "X2BgKMo8ojFpV6vdFIV4sbURqkLe6COg6tEE5yOuo0",
-  "callbackURL": "http://candy-twitter.com/auth/twitter/callback",
+  "callbackURL": "http://localhost:5000/auth/twitter/callback",
   "MEMORY_STORE": "secret",
   "port": 8888,
   "imgurKey": "sdfgsdfgsdfgsdfgsdfg",
