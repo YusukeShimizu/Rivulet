@@ -5,18 +5,19 @@
         document.write('<script src="ext/less-1.7.0.min.js"></script>');
         //jQuery 2.1.1(http://jquery.com/)
         document.write('<script src="/js/jquery-2.1.1.js"></script>');
+        //modernizr 1.5(http://modernizr.com/)
+        document.write('<script src="ext/modernizr.js"></script>');
     };
     scriptsLoader.body = function(){
         //Underscore.js 1.6.0(http://underscorejs.org)
-        document.write('<script src="/ext/underscore.js"></script>'); 
-        //Bootstrap v3.0.3 (http://getbootstrap.com)
-        document.write('<script src="/bootstrap/js/bootstrap.js"></script>');
-        //socket.ioÅ@version0.9.16(http://socket.io/)
+        document.write('<script src="/ext/underscore.js"></script>');
+        //socket.io¬Å@version0.9.16(http://socket.io/)
         document.write('<script src="/socket.io/socket.io.js"></script>');
         //all modules
         document.write('<script src="/lib/stream/settings.js"></script>');
         document.write('<script src="/lib/stream/client.js"></script>');
         document.write('<script src="/lib/stream/initplugins.js"></script>');
+        document.write('<script src="/lib/stream/statuslists.js"></script>');
         document.write('<script src="/lib/stream/streamPlugins.js"></script>');
         document.write('<script src="/lib/stream/settingsDialog.js"></script> ');
         document.write('<script src="/lib/stream/helpers.js"></script>');

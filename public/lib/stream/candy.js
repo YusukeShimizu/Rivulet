@@ -34,13 +34,15 @@
                     stream.user = data.info;
                     if(initial){
                         initial = false;
-                        // initPlugins are loaded when the page is loaded
-                        // use method without object
+                        //allocate templates
+                        window.templates = data.templates;
+                        // init functions are loaded when the page is loaded
                         initPlugins.forEach(function(plugin){
                             plugin.func.call(function(){},stream,plugin);
                         });
-                        //allocate templates
-                        window.templates = data.templates;
+                        statuslists.forEach(function(status){
+                            status.func.call(function(){},stream,status);
+                        });
                         //init settingsdialog
                         settingsDialog.init();
                         //notify any settings

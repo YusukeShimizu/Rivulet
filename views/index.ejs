@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html>
-
-
 <head>
     <title>Candy</title>
     <meta charset="UTF-8" />
@@ -9,20 +7,28 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <base target="_blank" />
     <meta name="language" content="en-US" />
-    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet/less" type="text/css" href="css/streamie.less" media="screen,projection,print" /> 
     <script type="text/javascript" src="js/scriptsLoader.js"></script>
-    <script>
-        scriptsLoader.header();
-    </script>
+    <script>scriptsLoader.header();</script>
     <link href='images/Candy_shortcut.png' rel='shortcut icon' />
 </head>
 
 <body id="www-streamie-org"  class="loading">
-    <div id="container-fruid">
+    <script>
+        scriptsLoader.body();
+    </script>
+    <div id="container">
         <div id="header">
-            <h1 id="logo"><a href="#" target="_self" >candy for <span id="currentuser-screen_name"></span></a></h1>
-            <div id="meta"><a href="/logout/twitter" target="_self" class="logout i18n">Logout</a></div>
+            <h1 id="logo">
+                <a href="#" target="_self" >
+                    candy for <span id="currentuser-screen_name"></span>
+                </a>
+            </h1>
+            <div id="meta">
+                <a href="/logout/twitter" target="_self" class="logout i18n">
+                    Logout
+                </a>
+            </div>
             <ul id="mainnav">
                 <li class="activatable rpl"><a href="#mention"  title="Mentions" target="_self">@</a></li>
                 <li class="activatable timeline active"><a href="#all"  title="Show All" target="_self">⚛</a></li>
@@ -49,46 +55,32 @@
             <div id="settings" class="panel"></div>
         </div>
         <div id="content">
-            <div class="logo"><img src="images/Candy_logo.png"  width="319" height="257" /></div>
-                <div id="about">
-                    <div class="container">
-				        <p class="point i18n">
-                            大切なツイートだけを、お届けします。
-                        </p>
-				        <p><a href="/auth/twitter" class="inject-hl" target="_self"><img src="https://si0.twimg.com/images/dev/buttons/sign-in-with-twitter-d.png" alt="Sign in with Twitter" /></a></p>
-                    </div>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-xs-4 col-md-4">
-                            <h2>キュレーション</h2>
-                            <p>キャンディは、全てのツイートを表示する事はしません。今までのTwitterでの行動を分析し、あなたにぴったりのツイートだけで作られたタイムラインをお届けします。</p>
-                        </div>
-                        <div class="col-xs-4 col-md-4">
-                            <h2>学習アルゴリズム</h2>
-                            <p>キャンディは、あなたのことをもっと知りたがっています。使えば使う程、素晴らしいパートナーへと成長していきます。</p>
-                        </div>
-                        <div class="col-xs-4 col-md-4">
-                            <h2>カスタムタイムラインとの同期</h2>
-                            <p>キャンディのタイムラインは、カスタムタイムラインと同期出来ます。あなたに近い趣向をもつユーザに対し、簡単に情報を伝える事が可能です。</p>
-                        </div>
-                    </div>    
-                    <hr>
-                </div>
-                
+            <div class="logo"><img src="images/Candy_logo.png"  width="319" height="257" />
+            </div>
+            <div id="about">
+                <p>
+                    大切なツイートだけを、お届けします。
+                </p>
+                <p>
+                    <a href="/auth/twitter" class="inject-hl" target="_self">
+                        <img src="https://si0.twimg.com/images/dev/buttons/sign-in-with-twitter-d.png" alt="Sign in with Twitter" />
+                    </a>
+                </p>
+                <h2>キュレーション</h2>
+                    <p>キャンディは、全てのツイートを表示する事はしません。Twitterでの行動を分析し、あなたにぴったりのツイートだけで作られたタイムラインをお届けします。</p>
+                <h2>学習アルゴリズム</h2>
+                    <p>キャンディは、あなたのことをもっと知りたがっています。使えば使う程、素晴らしいパートナーへと成長していきます。</p>
+                <h2>カスタムタイムラインとの同期</h2>
+                    <p>キャンディのタイムラインは、カスタムタイムラインと同期出来ます。あなたに近い趣向をもつユーザに対し、簡単に情報を伝える事が可能です。</p>    
+                <hr>
                 <p class="subline i18n">Yes,this is the open source software.<br>
                     <a href="https://github.com/YusukeShimizu/Candy">Join us on Github</a>
-                <br>
+                    <br>
                     <a href="https://twitter.com/Bruwbird">Follow us on Twitter</a>
                 </p>
-               
-
-			    <footer>
-                    <p>c Bruwbird Corp</p>
-                </footer>
             </div>
             <h2 class="h1 i18n">Timeline</h2>
-            <ol id="stream">
-            </ol>
+            <ol id="stream"></ol>
         </div>
     </div>
     <div id="imageUpload" class="popin">
@@ -101,10 +93,8 @@
             <input type="button" value="Cancel" class="button close i18n" />
         </div>
     </div>
-    <script>
-        scriptsLoader.body();
-    </script>
-    
+
+
 <!--      
      Simplified BSD License
      
@@ -134,5 +124,5 @@
      authors and should not be interpreted as representing official policies, either expressed
      or implied, of Malte Ubl.
 -->
-
+</body>
 </html>
