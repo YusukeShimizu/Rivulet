@@ -36,7 +36,32 @@
         // reply form inside tweet
         observe: {
             func: function observe (stream){
-        
+                // when the user hit escape
+                $(document).bind("key:escape",function(e){
+                    var target = $(e.target);
+                    if(target.is(":input") && target.closest("form.status").length > 0){
+                        target.trigger("close");
+                    }
+                });
+                $(document).delegate("form.status .close", "click", function (e) {
+                    e.preventDefault();
+                    $(this).trigger("close");
+                });
+                // submit event
+                $(document).on("submit","form.status",function(e){
+                    var form = $(this);
+                    var status = form.find("[name=status]");
+                    var val = status.val();
+                     // too long for Twitter
+                    if(val.length > TWEET_MAX_LENGTH) return false;
+                    // post to twitter
+                    client.send({
+                        action: "post",
+                        text: val
+                    });
+                    form.trigger("status:send");
+                    return false;
+                });
             }
         },
         replyForm: {
