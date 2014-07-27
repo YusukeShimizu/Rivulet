@@ -1,46 +1,57 @@
 //use socket.io(0.9.16)to enable real time communication
 (function(){
     var client = {};
-    var streamFailCount = 0;
-    
-    client.connect =function connect(cb){
-        // socket.io is loaded in page
-        var socket = io.connect('http://localhost');
-        
-        var failed = false;
+    var interval;
+    var pingTimeout;
+    // socket.io is loaded in page
+    var socket = io.connect('http://localhost');
+
+    //candy always use JSON
+    function send(data){
+        socket.emit('message', JSON.stringify(data));
+    }
+
+    client.connect = function(connect){
+
+        send('isLogined');
+        // send all messages to callback
+        socket.on('message', connect);
         var connected = true;
-
-        //always use JSON
-        function send(data){
-            socket.emit('message', JSON.stringify(data));
-        }
-        //make this globally accessible
-        client.send = function(data){
-            send(data);
-        }
-        // immediately after connect, start 
-        socket.on('message', cb);
-
-        // something wrong with streaming api 
-        socket.on('message', function (msg) {
-            if(failed) {
-                console.log("[Backend] Ignoring messages after fail "+msg)
-                return;
-            }
+        socket.on('message', function(msg){
             var data = JSON.parse(msg);
-            if(data.message) {
-                failed = true;
-                console.log("Backend error:"+ data.message);
-                // an error on the backend connection to twitter.
-                // Wait a short time and then reconnect.
-                setTimeout(function () {
-                    socket.disconnect();
-                    console.log("[Connect] Reconnecting after error "+streamFailCount);
-                    client.connect(cb);
-                }, 1000 * (++streamFailCount))
+            if(data == "pong") {
+                // a successful connection
+                connected = true;
             }
         });
-   }
+
+        // send a ping every N seconds
+        function ping() { 
+            connected = false;
+            send('ping');
+            if(pingTimeout) {
+                clearTimeout(pingTimeout);
+            }
+            pingTimeout = setTimeout(function () { 
+                if(!connected) {
+                    clearInterval(interval);
+                    socket.disconnect();
+                    console.log("[Connect] Reconnecting after connection failure");
+                    client.connect(connect);
+                }
+            }, 3000)
+        }
+        if(interval) {
+            clearInterval(interval);
+        }
+        interval = setInterval(ping, 5000);
+        ping();
+
+    }
+
+    client.send = function(data){
+        send(data);
+    } 
 
     window.client = client;
 })();

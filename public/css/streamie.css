@@ -188,7 +188,7 @@ body {
   background: #fefefe fixed;
 }
 body.loading {
-  background: #fefefe url("/images/lg_streamie.png") no-repeat center 250px;
+  background: #fefefe url("/images/lg_candy.png") no-repeat center 250px;
 }
 a {
   text-decoration: none;
