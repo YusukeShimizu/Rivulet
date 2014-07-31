@@ -11,12 +11,18 @@
         socket.emit('message', JSON.stringify(data));
     }
 
-    client.connect = function(connect){
+    // make this globally accessible
+    client.send = function(data){
+        send(data);
+    } 
 
+    client.connect = function(connect){
+        // confirm whether client is logined
         send('isLogined');
         // send all messages to callback
         socket.on('message', connect);
         var connected = true;
+
         socket.on('message', function(msg){
             var data = JSON.parse(msg);
             if(data == "pong") {
@@ -46,12 +52,6 @@
         }
         interval = setInterval(ping, 5000);
         ping();
-
     }
-
-    client.send = function(data){
-        send(data);
-    } 
-
     window.client = client;
 })();
