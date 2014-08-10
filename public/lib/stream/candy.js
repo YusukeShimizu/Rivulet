@@ -32,10 +32,9 @@
                         $("#content .logo").hide();
                     });
                     stream.user = data.info;
+                    stream.templates = data.templates;
                     if(initial){
                         initial = false;
-                        //allocate templates
-                        window.templates = data.templates;
                         // init functions are loaded when the page is loaded
                         initPlugins.forEach(function(plugin){
                             plugin.func.call(function(){},stream,plugin);
@@ -43,8 +42,6 @@
                         statuslists.forEach(function(status){
                             status.func.call(function(){},stream,status);
                         });
-                        //init settingsdialog
-                        settingsDialog.init();
                         //notify any settings
                         $(document).trigger("streamie:init:complete");
                     }

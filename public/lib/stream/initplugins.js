@@ -14,6 +14,12 @@
     settings.registerKey("notifications", "sound", "Play a sound for new tweets",  false);
 
     var plugins = {
+        // allocate templates
+        templates: {
+            func : function templates(stream,plugin){
+                window.templates = stream.templates;
+            }
+        },
         //when location.hash change set the class of html body
         hashState: {
             ScrollState :{},
@@ -107,11 +113,19 @@
                 //display screenname
                 $("#currentuser-screen_name").text("@"+stream.user.screen_name);
             }
+        },
+        settingsDialog: {
+            func : function settingsDialog(stream,plugin){
+                //init settingsdialog
+                window.settingsDialog.init();
+            }
         }
     }
     window.initPlugins = [
+        plugins.templates,
         plugins.hashState,
         plugins.navigation,
-        plugins.personalizeForCurrentUser
+        plugins.personalizeForCurrentUser,
+        plugins.settingsDialog
     ];
 })()

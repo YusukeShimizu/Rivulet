@@ -7,16 +7,18 @@ var routes = require(__dirname + '/routes');
 var user = require(__dirname + '/routes/user');
 var http = require('http');
 var path = require('path');
+var passport = require('passport');
 
 var app = express();
 
-//load added modules
-var setting = require(__dirname + '/lib/setting');
-var router = require(__dirname + '/lib/router');
-var connect = require(__dirname + '/lib/connect');
+//Passport will serialize and deserialize user instances to and from the session
+passport.serializeUser(function(user, done) {
+    done(null, user);
+});
+passport.deserializeUser(function(obj, done) {
+    done(null, obj);
+});
 
-//node_modules environments
-setting.init();
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -32,6 +34,10 @@ app.use(express.methodOverride());
 app.use(express.cookieParser("cookieParser"));
 app.use(express.session());
 setting.session(app);
+
+process.on('uncaughtException', function(err) {
+  /* uncaughtException handling */
+});
 
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
@@ -55,3 +61,5 @@ server.listen(app.get('port'), function(){
 
 //event based communication using socket.io
 connect.init(server);
+
+
