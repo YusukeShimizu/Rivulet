@@ -3,12 +3,5 @@
  */
 
 exports.index = function(req, res){
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Candy' });
 };
-
-exports.header = function(req,res){
-    //yay? connect.start(req,res,setting);
-    res.redirect('/');
-};
-
-exports.stream = function(socket){};
