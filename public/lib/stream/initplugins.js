@@ -72,12 +72,8 @@
                 // Logout button
                 $("#meta").on("click",".logout",function (e) {
                     //Cancel only the default action
-                    e.preventDefault();
-                    //connect server
-                    client.send({
-                        action: "logout" 
-                    });
-                    location.reload();
+                    //e.preventDefault();
+                    //location.reload();
                 });
                 // main header
                 $("#header").on("click","#mainnav a",function(e){

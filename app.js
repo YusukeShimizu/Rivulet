@@ -12,12 +12,14 @@ var path = require('path');
 var passport = require('passport');
 var TwitterStrategy = require('passport-twitter').Strategy;
 var node_twitter = require('twitter');
-// create node_twitter object when oauth is completed
-var ntwitter;
 
 // other modules
 var config = require(__dirname + '/lib/config.js').config;
 var templates = require(__dirname + '/lib/templates.js');
+// var tweetstream = require(__dirname + '/lib/tweetstream.js');
+
+// node_twitter object
+var ntwitter;
 
 var app = express();
 var server = http.createServer(app);
@@ -75,58 +77,79 @@ if ('development' == app.get('env')) {
     app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
+// main app view
+app.get('/', function(req, res){
+    res.render('index', { title: 'Candy' });
+});
 app.get('/users', user.list);
 app.get("/auth/twitter", passport.authenticate('twitter'));
 app.get("/auth/twitter/callback", passport.authenticate('twitter', {
     successRedirect: '/header',
     failureRedirect: '/'
 }));
+app.get('/logout/twitter', function(req,res){
+    req.logout();
+    req.session.destroy();
+    res.redirect("/header");
+});
 app.get("/header", function(req,res){
-    // create node_twitter object
-    ntwitter = new node_twitter({
-        consumer_key:config.TWITTER_CONSUMER_KEY,
-        consumer_secret:config.TWITTER_CONSUMER_SECRET,
-        access_token_key:req.user.twitter_token,
-        access_token_secret:req.user.twitter_token_secret
+
+    req.session.user = req.user;
+    console.log("successfully login @" + req.session.user._json.screen_name);
+    
+    io.sockets.on('connection',function(socket){
+
+        // identify user so we can emit to specific user
+        var room = req.session.user._json.screen_name || "anonymous";
+
+        socket.on('message',function(data){     
+            
+            //always use JSON
+            function send(data){
+                io.sockets.in(room).emit('message', JSON.stringify(data));
+            }
+            data = JSON.parse(data);
+            console.log(data);    
+
+            if(data == 'ping'){
+                send('pong');
+            }
+            // try to find the user info
+            if(req.session.user){
+
+                socket.join(req.session.user._json.screen_name);
+                send({
+                    action: "auth_OK",
+                    templates: templates,
+                    info: req.session.user._json
+                });
+                // connect to streaming api
+                ntwitter = new node_twitter({
+                    consumer_key:config.TWITTER_CONSUMER_KEY,
+                    consumer_secret:config.TWITTER_CONSUMER_SECRET,
+                    access_token_key:req.session.user.twitter_token,
+                    access_token_secret:req.session.user.twitter_token_secret
+                }).stream('user', function(stream) {
+                    stream.on('data', function(data) {
+                        // check what kind of data we receive
+                        // data = tweetstream.filter(data);
+                        send({
+                            tweet: data
+                        });
+                    });
+                });
+            }else{
+                console.log("something trouble at @" + room);
+                send({
+                    action: "auth_NG"
+                });
+
+            }
+        }); 
     });
     res.redirect('/');
 });
 
 server.listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));
-});
-
-//event based communication using socket.io
-io.sockets.on('connection',function(socket){
-    
-    socket.on('message',function(data){
-        
-        //always use JSON
-        function send(data){
-            console.log(socket.id);
-            io.sockets.socket(socket.id).emit('message', JSON.stringify(data));
-        }
-
-        data = JSON.parse(data);
-        console.log(data);
-
-        if(ntwitter){
-            send({
-                action: "auth_OK",
-                templates: templates
-            });
-
-            ntwitter.stream('user', function(stream) {
-                stream.on('data', function(data) {
-                    send({
-                        tweet: data
-                    });
-                });
-            });
-            if(data == "ping"){
-                send("pong");
-            }
-        }
-    });
 });
