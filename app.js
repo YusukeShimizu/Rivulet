@@ -89,67 +89,68 @@ app.get("/auth/twitter/callback", passport.authenticate('twitter', {
 }));
 app.get('/logout/twitter', function(req,res){
     req.logout();
-    req.session.destroy();
-    res.redirect("/header");
+    res.redirect("/");
 });
 app.get("/header", function(req,res){
-
-    req.session.user = req.user;
-    console.log("successfully login @" + req.session.user._json.screen_name);
-    
-    io.sockets.on('connection',function(socket){
-
-        // identify user so we can emit to specific user
-        var room = req.session.user._json.screen_name || "anonymous";
-
-        socket.on('message',function(data){     
-            
-            //always use JSON
-            function send(data){
-                io.sockets.in(room).emit('message', JSON.stringify(data));
-            }
-            data = JSON.parse(data);
-            console.log(data);    
-
-            if(data == 'ping'){
-                send('pong');
-            }
-            // try to find the user info
-            if(req.session.user){
-
-                socket.join(req.session.user._json.screen_name);
-                send({
-                    action: "auth_OK",
-                    templates: templates,
-                    info: req.session.user._json
-                });
-                // connect to streaming api
-                ntwitter = new node_twitter({
-                    consumer_key:config.TWITTER_CONSUMER_KEY,
-                    consumer_secret:config.TWITTER_CONSUMER_SECRET,
-                    access_token_key:req.session.user.twitter_token,
-                    access_token_secret:req.session.user.twitter_token_secret
-                }).stream('user', function(stream) {
-                    stream.on('data', function(data) {
-                        // check what kind of data we receive
-                        // data = tweetstream.filter(data);
-                        send({
-                            tweet: data
-                        });
-                    });
-                });
-            }else{
-                console.log("something trouble at @" + room);
-                send({
-                    action: "auth_NG"
-                });
-
-            }
-        }); 
-    });
+    passport.session.user = req.user;
+    console.log("successfully login @" + passport.session.user._json.screen_name);
     res.redirect('/');
 });
 
 server.listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));
 });
+
+io.sockets.on('connection',function(socket){
+
+    // identify user so we can emit to specific user
+    var room = passport.session.user._json.screen_name || "anonymous";
+
+    socket.on('message',function(data){     
+        
+        //always use JSON
+        function send(data){
+            io.sockets.in(room).emit('message', JSON.stringify(data));
+        }
+        data = JSON.parse(data);
+        console.log(data);    
+
+        if(data == 'ping'){
+            send('pong');
+        }
+        // try to find the user info
+        if(passport.session.user){
+            if(room != "anonymous"){
+                socket.join(room);
+            }
+            send({
+                action: "auth_OK",
+                templates: templates,
+                info: passport.session.user._json
+            });
+            // connect to streaming api
+            ntwitter = new node_twitter({
+                consumer_key:config.TWITTER_CONSUMER_KEY,
+                consumer_secret:config.TWITTER_CONSUMER_SECRET,
+                access_token_key:passport.session.user.twitter_token,
+                access_token_secret:passport.session.user.twitter_token_secret
+            }).stream('user', function(stream) {
+                stream.on('data', function(data) {
+                    // check what kind of data we receive
+                    // data = tweetstream.filter(data);
+                    send({
+                        tweet: data
+                    });
+                });
+            });
+        }else{
+            console.log("something trouble at @" + room);
+            send({
+                action: "auth_NG"
+            });
+
+        }
+    });         
+});
+
+
