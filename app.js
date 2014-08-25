@@ -88,12 +88,23 @@ app.get("/auth/twitter/callback", passport.authenticate('twitter', {
     failureRedirect: '/'
 }));
 app.get('/logout/twitter', function(req,res){
-    req.logout();
-    res.redirect("/");
+        req.session.destroy(function (err) {
+            res.redirect('/'); 
+    });
 });
 app.get("/header", function(req,res){
-    passport.session.user = req.user;
-    console.log("successfully login @" + passport.session.user._json.screen_name);
+    ntwitter =  new node_twitter({
+        consumer_key:config.TWITTER_CONSUMER_KEY,
+        consumer_secret:config.TWITTER_CONSUMER_SECRET,
+        access_token_key:req.user.twitter_token,
+        access_token_secret:req.user.twitter_token_secret
+    });
+    send({
+        action: "auth_OK",
+        templates: templates,
+        info: req.user._json
+    });
+    console.log("successfully login @" + req.user._json.screen_name);
     res.redirect('/');
 });
 
@@ -101,17 +112,20 @@ server.listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));
 });
 
+//always use JSON
+function send(data){
+    io.sockets.in(room).emit('message', JSON.stringify(data));
+}
+
+var room;
+
 io.sockets.on('connection',function(socket){
 
     // identify user so we can emit to specific user
-    var room = passport.session.user._json.screen_name || "anonymous";
+    room = socket.id || "anonymous";
 
     socket.on('message',function(data){     
         
-        //always use JSON
-        function send(data){
-            io.sockets.in(room).emit('message', JSON.stringify(data));
-        }
         data = JSON.parse(data);
         console.log(data);    
 
@@ -119,22 +133,12 @@ io.sockets.on('connection',function(socket){
             send('pong');
         }
         // try to find the user info
-        if(passport.session.user){
+        if(ntwitter){
             if(room != "anonymous"){
                 socket.join(room);
             }
-            send({
-                action: "auth_OK",
-                templates: templates,
-                info: passport.session.user._json
-            });
             // connect to streaming api
-            ntwitter = new node_twitter({
-                consumer_key:config.TWITTER_CONSUMER_KEY,
-                consumer_secret:config.TWITTER_CONSUMER_SECRET,
-                access_token_key:passport.session.user.twitter_token,
-                access_token_secret:passport.session.user.twitter_token_secret
-            }).stream('user', function(stream) {
+            ntwitter.stream('user', function(stream) {
                 stream.on('data', function(data) {
                     // check what kind of data we receive
                     // data = tweetstream.filter(data);
