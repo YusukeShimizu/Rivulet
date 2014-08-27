@@ -19,7 +19,7 @@ var templates = require(__dirname + '/lib/templates.js');
 // var tweetstream = require(__dirname + '/lib/tweetstream.js');
 
 // node_twitter object
-var ntwitter;
+var ntwitters = [];
 
 var app = express();
 var server = http.createServer(app);
@@ -79,7 +79,7 @@ if ('development' == app.get('env')) {
 
 // main app view
 app.get('/', function(req, res){
-    res.render('index', { title: 'Candy' });
+    res.render('index', { title: "Candy" });
 });
 app.get('/users', user.list);
 app.get("/auth/twitter", passport.authenticate('twitter'));
@@ -93,12 +93,12 @@ app.get('/logout/twitter', function(req,res){
     });
 });
 app.get("/header", function(req,res){
-    ntwitter =  new node_twitter({
+    ntwitters.push(new node_twitter({
         consumer_key:config.TWITTER_CONSUMER_KEY,
         consumer_secret:config.TWITTER_CONSUMER_SECRET,
         access_token_key:req.user.twitter_token,
         access_token_secret:req.user.twitter_token_secret
-    });
+    }));
     send({
         action: "auth_OK",
         templates: templates,
