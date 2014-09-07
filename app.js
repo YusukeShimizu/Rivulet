@@ -18,9 +18,6 @@ var config = require(__dirname + '/lib/config.js').config;
 var templates = require(__dirname + '/lib/templates.js');
 // var tweetstream = require(__dirname + '/lib/tweetstream.js');
 
-// node_twitter object
-var ntwitters = [];
-
 var app = express();
 var server = http.createServer(app);
 // using socket.io
@@ -88,22 +85,15 @@ app.get("/auth/twitter/callback", passport.authenticate('twitter', {
     failureRedirect: '/'
 }));
 app.get('/logout/twitter', function(req,res){
-        req.session.destroy(function (err) {
-            res.redirect('/'); 
-    });
+    req.logout();
+    res.redirect('/');
 });
 app.get("/header", function(req,res){
-    ntwitters.push(new node_twitter({
-        consumer_key:config.TWITTER_CONSUMER_KEY,
-        consumer_secret:config.TWITTER_CONSUMER_SECRET,
-        access_token_key:req.user.twitter_token,
-        access_token_secret:req.user.twitter_token_secret
-    }));
-    send({
-        action: "auth_OK",
-        templates: templates,
-        info: req.user._json
+    var token = ({
+        token: req.user.twitter_token,
+        token_secret: req.user.twitter_token_secret
     });
+    res.cookie('token',token);
     console.log("successfully login @" + req.user._json.screen_name);
     res.redirect('/');
 });
@@ -112,17 +102,12 @@ server.listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));
 });
 
-//always use JSON
-function send(data){
-    io.sockets.in(room).emit('message', JSON.stringify(data));
-}
-
-var room;
-
 io.sockets.on('connection',function(socket){
 
-    // identify user so we can emit to specific user
-    room = socket.id || "anonymous";
+    //always use JSON
+    function send(data){
+        socket.emit('message', JSON.stringify(data));
+    }
 
     socket.on('message',function(data){     
         
@@ -132,29 +117,12 @@ io.sockets.on('connection',function(socket){
         if(data == 'ping'){
             send('pong');
         }
-        // try to find the user info
-        if(ntwitter){
-            if(room != "anonymous"){
-                socket.join(room);
-            }
-            // connect to streaming api
-            ntwitter.stream('user', function(stream) {
-                stream.on('data', function(data) {
-                    // check what kind of data we receive
-                    // data = tweetstream.filter(data);
-                    send({
-                        tweet: data
-                    });
-                });
-            });
-        }else{
-            console.log("something trouble at @" + room);
+        else if(data.token != 'EMPTY'){
             send({
-                action: "auth_NG"
+                action: "auth_OK",
+                templates: templates
             });
-
         }
     });         
 });
-
 

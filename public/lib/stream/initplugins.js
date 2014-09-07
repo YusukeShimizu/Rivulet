@@ -72,8 +72,10 @@
                 // Logout button
                 $("#meta").on("click",".logout",function (e) {
                     //Cancel only the default action
-                    //e.preventDefault();
-                    //location.reload();
+                    e.preventDefault();
+                     // delete cookie
+                    cookie.set("token", "");
+                    location.reload();
                 });
                 // main header
                 $("#header").on("click","#mainnav a",function(e){

@@ -16,9 +16,14 @@
         send(data);
     } 
 
-    client.connect = function(connect){
-        // confirm whether client is logined
-        send('isLogined');
+    client.connect = function(connect){        
+        // init auth token from cookie. Backend like to receive a value so we use "EMPTY"
+        var token = cookie.get("token") || "EMPTY";
+        // immediately after connect, send the auth token
+        socket.send(JSON.stringify({
+            token: token
+        }));
+
         // send all messages to callback
         socket.on('message', connect);
         var connected = true;
