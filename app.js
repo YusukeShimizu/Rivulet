@@ -16,7 +16,7 @@ var node_twitter = require('twitter');
 // other modules
 var config = require(__dirname + '/lib/config.js').config;
 var templates = require(__dirname + '/lib/templates.js');
-// var tweetstream = require(__dirname + '/lib/tweetstream.js');
+var twitter_connector = require(__dirname + '/lib/twitter_connector.js');
 
 var app = express();
 var server = http.createServer(app);
@@ -89,11 +89,12 @@ app.get('/logout/twitter', function(req,res){
     res.redirect('/');
 });
 app.get("/header", function(req,res){
-    var token = ({
-        token: req.user.twitter_token,
-        token_secret: req.user.twitter_token_secret
-    });
-    res.cookie('token',token);
+
+    res.cookie('token',req.user.twitter_token,{maxAge:60000, httpOnly:false});
+    res.cookie('token_secret',req.user.twitter_token_secret,{maxAge:60000, httpOnly:false});
+    res.cookie('user_id',req.user._json.id,{maxAge:60000, httpOnly:false});
+    res.cookie('screen_name',req.user._json.screen_name,{maxAge:60000, httpOnly:false});
+
     console.log("successfully login @" + req.user._json.screen_name);
     res.redirect('/');
 });
@@ -118,10 +119,27 @@ io.sockets.on('connection',function(socket){
             send('pong');
         }
         else if(data.token != 'EMPTY'){
+            var info = ({
+                user_id: data.user_id,
+                screen_name: data.screen_name
+            });
             send({
                 action: "auth_OK",
-                templates: templates
+                templates: templates,
+                info: info
             });
+
+            var subscription = twitter_connector.subscribe(info.user_id,function(data){
+                send({
+                    tweet: data
+                });
+            },{
+                consumer_key: config.TWITTER_CONSUMER_KEY,
+                consumer_secret: config.TWITTER_CONSUMER_SECRET,
+                access_token_key: data.token,
+                access_token_secret: data.token_secret
+            });
+
         }
     });         
 });

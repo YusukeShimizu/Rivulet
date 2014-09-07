@@ -16,12 +16,20 @@
         send(data);
     } 
 
-    client.connect = function(connect){        
+    client.connect = function(connect){ 
+
         // init auth token from cookie. Backend like to receive a value so we use "EMPTY"
         var token = cookie.get("token") || "EMPTY";
+        var token_secret = cookie.get("token_secret") || "EMPTY";
+        var user_id = cookie.get("user_id") || "EMPTY";
+        var screen_name = cookie.get("screen_name") || "EMPTY";
+
         // immediately after connect, send the auth token
         socket.send(JSON.stringify({
-            token: token
+            token: token,
+            token_secret: token_secret,
+            user_id: user_id,
+            screen_name: screen_name 
         }));
 
         // send all messages to callback
