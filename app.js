@@ -2,7 +2,7 @@
  * Module dependencies.
  */
 
-var express = require('express');
+var express = module.exports = require('express');
 var routes = require(__dirname + '/routes');
 var user = require(__dirname + '/routes/user');
 var http = require('http');
@@ -11,18 +11,16 @@ var path = require('path');
 // npm modules
 var passport = require('passport');
 var TwitterStrategy = require('passport-twitter').Strategy;
-var node_twitter = require('twitter');
-
-// other modules
 var config = require(__dirname + '/lib/config.js').config;
-var templates = require(__dirname + '/lib/templates.js');
-var twitter_connector = require(__dirname + '/lib/twitter_connector.js');
 
-var app = express();
+var app = module.exports = express();
 var server = http.createServer(app);
+
 // using socket.io
 var io = require('socket.io').listen(server);    
-               
+var stream = require(__dirname + '/lib/stream.js');
+var sessionStore = express.session.MemoryStore();
+
 //Passport will serialize and deserialize user instances to and from the session
 passport.serializeUser(function(user, done) {
     done(null, user);
@@ -58,13 +56,12 @@ app.use(express.methodOverride());
 
 //validate session middleware
 app.use(express.cookieParser("cookieParser"));
-app.use(express.session());
+app.use(express.session({
+    key : app.get('cookieSessionKey'),     
+    store : sessionStore
+}));
 app.use(passport.initialize());
 app.use(passport.session()); 
-
-process.on('uncaughtException', function(err) {
-    /* uncaughtException handling */
-});
 
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
@@ -75,72 +72,22 @@ if ('development' == app.get('env')) {
 }
 
 // main app view
-app.get('/', function(req, res){
-    res.render('index', { title: "Candy" });
-});
+app.get('/', routes.index);
 app.get('/users', user.list);
+// passport Routes  
+app.get("/header", routes.header);
+app.get('/logout/twitter', routes.logout);
 app.get("/auth/twitter", passport.authenticate('twitter'));
 app.get("/auth/twitter/callback", passport.authenticate('twitter', {
     successRedirect: '/header',
     failureRedirect: '/'
 }));
-app.get('/logout/twitter', function(req,res){
-    req.logout();
-    res.redirect('/');
-});
-app.get("/header", function(req,res){
-
-    res.cookie('token',req.user.twitter_token,{maxAge:60000, httpOnly:false});
-    res.cookie('token_secret',req.user.twitter_token_secret,{maxAge:60000, httpOnly:false});
-    res.cookie('user_id',req.user._json.id,{maxAge:60000, httpOnly:false});
-    res.cookie('screen_name',req.user._json.screen_name,{maxAge:60000, httpOnly:false});
-
-    console.log("successfully login @" + req.user._json.screen_name);
-    res.redirect('/');
-});
 
 server.listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));
 });
 
-io.sockets.on('connection',function(socket){
-
-    //always use JSON
-    function send(data){
-        socket.emit('message', JSON.stringify(data));
-    }
-
-    socket.on('message',function(data){     
-        
-        data = JSON.parse(data);
-        console.log(data);    
-
-        if(data == 'ping'){
-            send('pong');
-        }
-        else if(data.token != 'EMPTY'){
-            var info = ({
-                user_id: data.user_id,
-                screen_name: data.screen_name
-            });
-            send({
-                action: "auth_OK",
-                templates: templates,
-                info: info
-            });
-
-            var subscription = twitter_connector.subscribe(info.user_id,function(data){
-                send({
-                    tweet: data
-                });
-            },{
-                consumer_key: config.TWITTER_CONSUMER_KEY,
-                consumer_secret: config.TWITTER_CONSUMER_SECRET,
-                access_token_key: data.token,
-                access_token_secret: data.token_secret
-            });
-
-        }
-    });         
-});
-
+// share session between socket.io and express
+io.set('authorization', stream.init);
+// connect clients 
+io.sockets.on('connection',stream.connect);
