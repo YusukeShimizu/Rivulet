@@ -11,6 +11,18 @@
     <script type="text/javascript" src="js/scriptsLoader.js"></script>
     <script>scriptsLoader.header();</script>
     <link href='images/Candy_shortcut.png' rel='shortcut icon' />
+
+    <!-- for google analytics tracking：https://www.google.com/analytics/ -->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-48098006-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
 </head>
 
 <body id="www-streamie-org"  class="loading">
@@ -31,10 +43,10 @@
             </div>
             <ul id="mainnav">
                 <li class="activatable rpl"><a href="#mention"  title="Mentions" target="_self">@</a></li>
-                <li class="activatable timeline active"><a href="#all"  title="Show All" target="_self">⚛</a></li>
-                <li class="activatable rt"><a href="#retweet"  title="Retweets" target="_self">♻</a></li>
-                <li class="settings"><a href="#settings"  title="Settings" target="_self">⚙</a></li>
-                <li class="add"><a href="#add"  title="New Tweet" target="_self">✍</a></li>
+                <li class="activatable timeline active"><a href="#all"  title="Show All" target="_self">?</a></li>
+                <li class="activatable rt"><a href="#retweet"  title="Retweets" target="_self">?</a></li>
+                <li class="settings"><a href="#settings"  title="Settings" target="_self">?</a></li>
+                <li class="add"><a href="#add"  title="New Tweet" target="_self">?</a></li>
             </ul>
             <form action="/1/statuses/update.json" method="post" class="status tweet" id="mainstatus"> 
                 <input type="hidden" name="in_reply_to_status_id" value="" />
@@ -95,3 +107,4 @@
     </div>
 </body>
 </html>
+
