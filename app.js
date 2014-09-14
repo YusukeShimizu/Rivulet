@@ -22,8 +22,7 @@ var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
 var sessionStore = new express.session.MemoryStore();
-var cookieParser = require('cookie-parser');
-var parseCookie = cookieParser('cookieSessionKey');
+var cookieParser = express.cookieParser("cookieParser");
     
 //Passport will serialize and deserialize user instances to and from the session
 passport.serializeUser(function(user, done) {
@@ -59,9 +58,9 @@ app.use(express.urlencoded());
 app.use(express.methodOverride());
 
 //validate session middleware
-app.use(express.cookieParser(app.get("cookieSessionKey")));
+app.use(cookieParser);
 app.use(express.session({
-    secret : 'cookieSessionKey',     
+    secret: "cookieSessionKey",
     store : sessionStore
 }));
 app.use(passport.initialize());
@@ -91,20 +90,17 @@ server.listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));
 });
 
-var cookieParser = require('cookie-parser');
-var parseCookie = cookieParser('cookieSessionKey');
-    
 // share session between socket.io and express
 io.configure(function(){
 	io.set('authorization', function(handshakeData, callback) {
 
     	if (handshakeData.headers.cookie) {
 
-            parseCookie(handshakeData, null, function(err) {
+            cookieParser(handshakeData, null, function(err) {
                 if (err) {
                     return accept('Error parseCookie.', false);
                 }
-                var sessionID = handshakeData.signedCookies["cookieSessionKey"];
+                var sessionID = handshakeData.signedCookies["cookieParser"];
  
                 sessionStore.get(sessionID, function(err, session) {
                     if (err) {
