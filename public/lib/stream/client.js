@@ -1,4 +1,4 @@
-//use socket.io(0.9.16)to enable real time communication
+//use socket.io(0.9.2)to enable real time communication
 (function(){
     var client = {};
     var interval;
@@ -21,6 +21,7 @@
         // send all messages to callback
         socket.on('message', connect);
         var connected = true;
+        var auth = false;
 
         socket.on('message', function(msg){
             var data = JSON.parse(msg);
@@ -28,12 +29,21 @@
                 // a successful connection
                 connected = true;
             }
+            else if(data.action == 'auth_OK'){
+                auth = true;
+                connected = true;
+            }
         });
 
         // send a ping every N seconds
-        function ping() { 
+        function confirm_connection() { 
             connected = false;
-            send('ping');
+            if(!auth){
+                send('no_auth');
+            }
+            else{
+                send('ping');
+            }
             if(pingTimeout) {
                 clearTimeout(pingTimeout);
             }
@@ -49,8 +59,8 @@
         if(interval) {
             clearInterval(interval);
         }
-        interval = setInterval(ping, 5000);
-        ping();
+        interval = setInterval(confirm_connection, 5000);
+        confirm_connection();
     }
     window.client = client;
 })();

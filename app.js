@@ -60,7 +60,7 @@ app.use(express.methodOverride());
 //validate session middleware
 app.use(cookieParser);
 app.use(express.session({
-    secret: "cookieSessionKey",
+    secret: "cookieParser",
     store : sessionStore
 }));
 app.use(passport.initialize());
@@ -100,26 +100,22 @@ io.configure(function(){
                 if (err) {
                     return accept('Error parseCookie.', false);
                 }
-                var sessionID = handshakeData.signedCookies["cookieParser"];
+                var sessionID = handshakeData.signedCookies["connect.sid"];
  
-                sessionStore.get(sessionID, function(err, session) {
+                sessionStore.get(sessionID, function(err, Session) {
                     if (err) {
                         console.dir(err);
                         callback(err.message, false);
                     }
-                    else if (!session) {
+                    else if (!Session) {
                         console.log('session not found');
                         callback('session not found', false);
                     }
                     else {
                         console.log("authorization success");
-     
                         // set session things to handShakeData
-                        handshakeData.cookie = cookie;
-                        handshakeData.sessionID = sessionID;
-                        handshakeData.sessionStore = sessionStore;
-                        handshakeData.session = new Session(handshakeData, session);
-     
+                        handshakeData.session = Session;
+                        
                         callback(null, true);
                     }
                 });
@@ -139,6 +135,8 @@ io.sockets.on('connection',function(socket){
         socket.emit('message', JSON.stringify(data));
     }
 
+    var subscription;
+
     socket.on('message',function(data){     
         
         data = JSON.parse(data);
@@ -147,27 +145,39 @@ io.sockets.on('connection',function(socket){
         if(data == 'ping'){
             send('pong');
         }
-        else if(socket.handshake.session.user){
-            send({
-                action: "auth_OK",
-                templates: templates,
-                info: socket.handshake.session.user._json
-            });
-
-            var subscription = twitter_connector.subscribe(socket.handshake.session.user._json.user_id,function(data){
+        else if(data == 'no_auth'){
+            if(socket.handshake.session.user){
                 send({
-                    tweet: data
+                    action: "auth_OK",
+                    templates: templates,
+                    info: socket.handshake.session.user._json
                 });
-            },{
-                // set requester
-                consumer_key: config.TWITTER_CONSUMER_KEY,
-                consumer_secret: config.TWITTER_CONSUMER_SECRET,
-                access_token_key: socket.handshake.session.user.twitter_token,
-                access_token_secret: socket.handshake.session.user.twitter_token_secret
-            });
-        }
-    });
 
+                subscription = twitter_connector.subscribe(socket.handshake.session.user._json.id,function(data){
+                    send({
+                        tweet: data
+                    });
+                },{
+                    // set requester
+                    consumer_key: config.TWITTER_CONSUMER_KEY,
+                    consumer_secret: config.TWITTER_CONSUMER_SECRET,
+                    access_token_key: socket.handshake.session.user.twitter_token,
+                    access_token_secret: socket.handshake.session.user.twitter_token_secret
+                });
+            }else {
+                send('no_auth');
+            }
+        }   
+    });
+    // delete subscription 
+    socket.on('disconnect', function(){
+        if(subscription) {
+            subscription.unsubscribe();
+        }
+    })
+
+    // just making sure
+    /*
     console.log('session data', socket.handshake.session);
     var sessionReloadIntervalID = setInterval(function() {
         socket.handshake.session.reload(function() {
@@ -177,4 +187,5 @@ io.sockets.on('connection',function(socket){
     socket.on("disconnect", function(message) {
         clearInterval(sessionReloadIntervalID);
     });
+    */
 });

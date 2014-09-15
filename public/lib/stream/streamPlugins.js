@@ -5,10 +5,10 @@
 (function(){
 
     settings.registerNamespace("filter", "Filter");
-    settings.registerKey("filter", "longConversation", "Filter long (more than 3 tweets) conversations of others",  false);
+    settings.registerKey("not work, for now", "longConversation", "Filter long (more than 3 tweets) conversations of others",  false);
     settings.registerNamespace("stream", "Stream");
     settings.registerKey("stream", "showRetweets", "Show Retweets",  true);
-    settings.registerKey("stream", "keepScrollState", "Keep scroll level when new tweets come in",  true); 
+    settings.registerKey("not work, for now", "keepScrollState", "Keep scroll level when new tweets come in",  true); 
 
     plugins = {
         //turns retweet into something similar to tweets

@@ -2,10 +2,10 @@
  * Does anonymous tracking of usage
  */
 
-{function(settings) {
+(function() {
     
     settings.registerNamespace("tracking", "Tracking");
-    settings.registerKey("tracking", "allowed", "Allow anonymous tracking of my usage of Streamie",  true);
+    settings.registerKey("tracking", "allowed", "Allow anonymous tracking of my usage",  true);
     
     var events = [
         "status:send", 
@@ -45,5 +45,4 @@
     });
        
     return {}
-    }
 })();

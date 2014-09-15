@@ -5,13 +5,13 @@
 (function(){
    
     //register settings
-    settings.registerNamespace("general", "General");
-    settings.registerKey("general", "showTwitterBackground", "Show my background from Twitter",  false);
+    settings.registerNamespace("curation", "curation");
+    settings.registerNamespace("not work, for now", "not work, for now")
+    settings.registerKey("not work, for now", "curation_timeline", "show curated timeline(the Candy way)",  true);
     settings.registerNamespace("notifications", "Notifications");
-    settings.registerKey("notifications", "tweets", "Notify for new tweets (yellow icon)",  true);
-    settings.registerKey("notifications", "mentions", "Notify for new mentions (green icon)",  true);
-    settings.registerKey("notifications", "direct", "Notify for new direct messages (blue icon)",  true);
-    settings.registerKey("notifications", "sound", "Play a sound for new tweets",  false);
+    settings.registerKey("not work, for now", "tweets", "Notify for new tweets (yellow icon)",  true);
+    settings.registerKey("not work, for now", "mentions", "Notify for new mentions (green icon)",  true);
+    settings.registerKey("not work, for now", "sound", "Play a sound for new tweets",  false);
 
     var plugins = {
         // allocate templates
@@ -70,13 +70,13 @@
                     }
                 });
                 // Logout button
+                /*
                 $("#meta").on("click",".logout",function (e) {
                     //Cancel only the default action
                     e.preventDefault();
-                     // delete cookie
-                    cookie.set("token", "");
-                    location.reload();
+                    client.send('logout');
                 });
+                */
                 // main header
                 $("#header").on("click","#mainnav a",function(e){
                     var a = $(this);
