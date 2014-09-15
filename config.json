@@ -3,5 +3,5 @@
     "TWITTER_CONSUMER_SECRET": "X2BgKMo8ojFpV6vdFIV4sbURqkLe6COg6tEE5yOuo0",
     "callbackURL": "http://candy-twitter.com/auth/twitter/callback",
     "MEMORY_STORE": "secret",
-    "port": 3000
+    "port": 5000
 }
