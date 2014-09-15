@@ -10,6 +10,8 @@
     settings.registerKey("stream", "showRetweets", "Show Retweets",  true);
     settings.registerKey("not work, for now", "keepScrollState", "Keep scroll level when new tweets come in",  true); 
 
+    var Tweets = {};
+
     plugins = {
         //turns retweet into something similar to tweets
         handleRetweet: {
