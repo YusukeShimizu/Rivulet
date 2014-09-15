@@ -4,7 +4,7 @@
     var interval;
     var pingTimeout;
     // socket.io is loaded in page
-    var socket = io.connect('http://candy-twitter.com/');
+    var socket = io.connect('http://localhost');
 
     //candy always use JSON
     function send(data){
