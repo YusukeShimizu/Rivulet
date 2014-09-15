@@ -57,6 +57,20 @@
                 this();
             }
         },
+        // if a tweet with the name id is in the stream already, do not continue
+        avoidDuplicates: {
+            func: function avoidDuplicates (tweet, stream) {
+                var id = tweet.data.id;
+                if(Tweets[id] && tweet.streamDirty) {
+      	            this();
+      	        } else if(Tweets[id]) {
+                // duplicate detected -> do not continue;
+                } else {
+                    Tweets[id] = tweet;
+                    this();
+                }
+            }
+        },
         //set the template
         template: {
             func: function template(tweet,stream){
@@ -116,6 +130,7 @@
         plugins.handleRetweet,
         plugins.tweetsOnly,
         plugins.mentions,
+        plugins.avoidDuplicates,
         plugins.template,
         plugins.htmlEncode,
         plugins.renderTemplate,
