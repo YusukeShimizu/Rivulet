@@ -205,6 +205,7 @@
     statuslists = [
         plugins.observe,
         plugins.replyForm,
+        plugins.quote,
         plugins.retweet,
         plugins.deleteStatus,
         plugins.favorite
