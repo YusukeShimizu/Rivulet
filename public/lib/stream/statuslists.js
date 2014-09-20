@@ -102,7 +102,7 @@
                     var author = tweet.data.user.screen_name;
                     var ats = ["@"+author];
                     tweet.mentions.forEach(function (at) {
-                        if(at != author && at != streamie.user.screen_name) {
+                        if(at != author && at != stream.user.screen_name) {
                             ats.push("@"+at);
                         }
                     })
