@@ -92,6 +92,22 @@
                 });
             }
         },
+        // The old style retweet, with the ability to comment on the original text
+        quote: {
+            func: function quote (stream) {
+                $(document).delegate("#stream .quote", "click", function (e) {
+                    var li = $(this).parents("li");
+                    var tweet = li.data("tweet");
+                    var form = getReplyForm(li);
+                    form.find("[name=in_reply_to_status_id]").val(""); // no reply
+                    // make text. TODO: Style should be configurable
+                    var text = tweet.data.text + " /via @"+tweet.data.user.screen_name
+            
+                    form.show();
+                    //setCaret(form, text)
+                })
+            }
+        },
         // Click on retweet button.Candy only interested in normal retweet
         retweet: {
             func: function retweet (stream) {
