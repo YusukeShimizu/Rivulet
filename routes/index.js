@@ -42,7 +42,20 @@ exports.favorite = function(req,res){
         access_token_key: req.user.twitter_token,
         access_token_secret: req.user.twitter_token_secret
     })
-    .createFavorite(req.body.tweet_id,true, function(data){
+    .post("/favorites/create.json?id="+escape(req.body.tweet_id), function(data){
+        console.log(data);  
+    });
+    res.redirect('/');
+}
+
+exports.unfavorite = function(req,res){
+    var twitter = new node_twitter({
+        consumer_key: config.TWITTER_CONSUMER_KEY,
+        consumer_secret: config.TWITTER_CONSUMER_SECRET,
+        access_token_key: req.user.twitter_token,
+        access_token_secret: req.user.twitter_token_secret
+    })
+    .post("/favorites/destroy.json?id="+escape(req.body.tweet_id), function(data){
         console.log(data);  
     });
     res.redirect('/');
@@ -55,7 +68,7 @@ exports.delete = function(req,res){
         access_token_key: req.user.twitter_token,
         access_token_secret: req.user.twitter_token_secret
     })
-    .destroyStatus(req.body.tweet_id, function(data){
+    .post("/statuses/destroy/"+escape(req.body.tweet_id)+".json", function(data){
         console.log(data);  
     });
     res.redirect('/');
@@ -68,7 +81,7 @@ exports.retweet = function(req,res){
         access_token_key: req.user.twitter_token,
         access_token_secret: req.user.twitter_token_secret
     })
-    .retweetStatus(req.body.tweet_id, function(data){
+    .post("/statuses/retweet/"+escape(req.body.tweet_id)+".json", function(data){
         console.log(data);  
     });
     res.redirect('/');

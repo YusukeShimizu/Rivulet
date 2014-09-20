@@ -81,6 +81,7 @@ app.get('/users', user.list);
 app.get('/header', routes.header);
 app.post('/tweet',routes.tweet);
 app.post('/favorite',routes.favorite);
+app.post('/unfavorite',routes.unfavorite);
 app.post('/delete',routes.delete);
 app.post('/retweet',routes.retweet);
 app.get('/logout/twitter', routes.logout);
@@ -89,7 +90,6 @@ app.get("/auth/twitter/callback", passport.authenticate('twitter', {
     successRedirect: '/header',
     failureRedirect: '/'
 }));
-
 
 server.listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));

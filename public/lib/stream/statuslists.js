@@ -55,11 +55,21 @@
                      // too long for Twitter
                     if(val.length > TWEET_MAX_LENGTH) return false;
                     // post to twitter
-                    client.send({
-                        action: "post",
-                        text: val
+                    $.ajax({
+                        type: 'POST',
+                        url: '/tweet',
+                        data: {
+                            'tweet': val
+                        },
+                        success: function(data){
+                            var textarea = form.find("textarea");
+                            var val = textarea.data("init-val") || "";
+                            textarea.val(val);
+                            // { custom-event: status:send }
+                            form.trigger("status:send");
+                        }
                     });
-                    form.trigger("status:send");
+
                     return false;
                 });
             }
@@ -81,12 +91,107 @@
                     })
                 });
             }
+        },
+        // Click on retweet button.Candy only interested in normal retweet
+        retweet: {
+            func: function retweet (stream) {
+                $(document).delegate("#stream .actions .retweet", "click", function (e) {
+                    if(confirm("Do you really want to retweet?")) {
+                        var button = $(this);
+                        var li = button.parents("li");
+                        var tweet = li.data("tweet");
+                        var id = tweet.data.id;
+              
+                        // Post to twitter
+                        $.ajax({
+                            type: 'POST',
+                            url: '/retweet',
+                            data: {
+                                'tweet_id': id
+                            },
+                            success: function(data){
+                                button.hide();
+                                $(document).trigger("status:retweet")  
+                            }
+                        });
+                    }
+           
+                })
+            }
+        },
+        // Click on delete button
+        deleteStatus: {
+            func: function deleteStatus (stream) {
+                $(document).delegate("#stream .actions .delete", "click", function (e) {
+                    var button = $(this);
+                    var li = button.parents("li");
+                    var tweet = li.data("tweet");
+                    var id = tweet.data.id;
+            
+                    if(!tweet.deleted) {
+                        if(confirm('Do you really want to delete this tweet?')) {
+                             $.ajax({
+                                type: 'POST',
+                                url: '/delete',
+                                data: {
+                                    'tweet_id': id
+                                },
+                                success: function(data){
+                                    $(document).trigger("status:delete");
+                                    button.remove();
+                                }
+                            });
+                        }
+                    }
+                })
+            }
+        },
+        // Click on favorite button
+        favorite: {
+            func: function favorite (stream) {
+            $(document).delegate("#stream .actions .favorite", "click", function (e) {
+                var li = $(this).parents("li");
+                var tweet = li.data("tweet");
+                var id = tweet.data.id;
+            
+                if(!tweet.data.favorited) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/favorite',
+                        data: {
+                            'tweet_id': id
+                        },
+                        success: function(data){
+                            $(document).trigger("status:favorite")
+                            tweet.data.favorited = true;
+                            li.addClass("starred");
+                        }
+                    });
+                } else {
+                     $.ajax({
+                        type: 'POST',
+                        url: '/unfavorite',
+                        data: {
+                            'tweet_id': id
+                        },
+                        success: function(data){
+                            $(document).trigger("status:favorite")
+                            tweet.data.favorited = true;
+                            li.removeClass("starred");
+                        }
+                    });
+                }
+            })
         }
+    }
     }
 
     statuslists = [
         plugins.observe,
-        plugins.replyForm
+        plugins.replyForm,
+        plugins.retweet,
+        plugins.deleteStatus,
+        plugins.favorite
     ];
 
 

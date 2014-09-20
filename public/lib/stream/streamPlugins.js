@@ -13,6 +13,21 @@
     var Tweets = {};
 
     plugins = {
+        // Twitter changed some of the IDs to have a second variant that is represented
+        // as a string because JavaScript does not handle numbers above 2**43 well.
+        stringIDs: {
+            func: function stringIDs (tweet) {
+                var data = tweet.data;
+                data.id = data.id_str;
+                data.in_reply_to_status_id = data.in_reply_to_status_id_str;
+                if(data.retweeted_status) {
+                    data = data.retweeted_status
+                    data.id = data.id_str;
+                    data.in_reply_to_status_id = data.in_reply_to_status_id_str;
+                }
+                this();
+            }
+        },
         //turns retweet into something similar to tweets
         handleRetweet: {
             func: function handleRetweet(tweet){
@@ -37,9 +52,25 @@
                         $(document).trigger("tweet:first");
                     }
                     stream.count++;
+                    if(tweet.data.user.id == stream.user.id) {
+                        tweet.yourself = true;
+                    }
                     tweet.created_at = new Date(tweet.data.created_at);
                     this();
                 }else{
+                    if(tweet.data["delete"]) {
+                        var del = tweet.data["delete"];
+                        if(del.status) {
+                            var tweet = Tweets[del.status.id_str];
+                            $(document).trigger("tweet:delete", [ del, tweet ]);
+                            if(tweet) {
+                                tweet.deleted = true;
+                                if(tweet.node) {
+                                    tweet.node.addClass('deleted');
+                                }
+                            }
+                        }
+                    }
                 }
             }
         },
@@ -129,6 +160,7 @@
         }
     }
     window.streamPlugins = [
+        plugins.stringIDs,
         plugins.handleRetweet,
         plugins.tweetsOnly,
         plugins.mentions,

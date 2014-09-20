@@ -89,7 +89,7 @@
                     socket.disconnect();
                     connectFail++;
                     console.log("[Connect] Reconnecting after connection failure");
-                    client.connect(connect);
+                    client.connect(cb);
                 }
             }, 3000)
         }

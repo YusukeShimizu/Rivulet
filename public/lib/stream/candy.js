@@ -6,11 +6,11 @@
 
 //The immediate function pattern to make modules 
 (function(){
-    var stream = {};
+    var candy = {};
     var initial = true;
     var stream = new tweetstream.Stream(settings);
 
-    stream.start = (function(){
+    candy.start = (function(){
 
         //using jquery
         $(function(){
