@@ -32,6 +32,23 @@
         return form;
     }
 
+    // Sets status textarea text and sets caret or selection.
+    function setCaret(form, text, start, end) { 
+        var textarea = form.find("[name=status]");
+        if(!text) {
+            text = textarea[0].value
+        }
+        textarea.val(text);
+        textarea.focus();
+        if(start == null) {
+            start = text.length;
+        }
+        if(end == null) {
+            end = start
+        }
+        textarea[0].setSelectionRange(start, end);
+    }
+
     plugins = {
         // reply form inside tweet
         observe: {
@@ -104,7 +121,7 @@
                     var text = tweet.data.text + " /via @"+tweet.data.user.screen_name
             
                     form.show();
-                    //setCaret(form, text)
+                    setCaret(form, text);
                 })
             }
         },
