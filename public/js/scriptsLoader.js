@@ -12,9 +12,10 @@
         //Underscore.js 1.6.0(http://underscorejs.org)
         document.write('<script src="/ext/underscore.js"></script>');
         document.write('<script src="/ext/cookie.js"></script>');
-        //socket.io@version0.9.2(http://socket.io/)
+        //socket.io@version0.9.2(http://socket.io/)
         document.write('<script src="/socket.io/socket.io.js"></script>');
         //all modules
+        document.write('<script src="/lib/stream/restAPI.js"></script>');
         document.write('<script src="/lib/stream/settings.js"></script>');
         document.write('<script src="/lib/stream/client.js"></script>');
         document.write('<script src="/lib/stream/initplugins.js"></script>');

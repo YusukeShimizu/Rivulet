@@ -65,18 +65,10 @@
             func: function navigation(stream,plugin){
                 // mainstatus 
                 $("#mainstatus").on("close",function(){
-                    if($("#mainstatus").hasclass("show")){
+                    if($("#mainstatus").hasClass("show")){
                         $("#mainstatus").removeClass("show");
                     }
                 });
-                // Logout button
-                /*
-                $("#meta").on("click",".logout",function (e) {
-                    //Cancel only the default action
-                    e.preventDefault();
-                    client.send('logout');
-                });
-                */
                 // main header
                 $("#header").on("click","#mainnav a",function(e){
                     var a = $(this);
@@ -117,6 +109,21 @@
                 //init settingsdialog
                 window.settingsDialog.init();
             }
+        },
+        // listen to keyboard events and translate them to semantic custom events
+        keyboardShortCuts: {
+            func: function keyboardShortCuts () {
+          
+                function trigger(e, name) {
+                    $(e.target).trigger("key:"+name);
+                }
+          
+                $(document).keyup(function (e) {
+                    if(e.keyCode == 27) { // escape
+                        trigger(e, "escape")
+                    }
+                })
+            }     
         }
     }
     window.initPlugins = [
@@ -124,6 +131,7 @@
         plugins.hashState,
         plugins.navigation,
         plugins.personalizeForCurrentUser,
-        plugins.settingsDialog
+        plugins.settingsDialog,
+        plugins.keyboardShortCuts
     ];
 })()

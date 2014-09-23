@@ -79,11 +79,7 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/users', user.list);
 app.get('/header', routes.header);
-app.post('/tweet',routes.tweet);
-app.post('/favorite',routes.favorite);
-app.post('/unfavorite',routes.unfavorite);
-app.post('/delete',routes.delete);
-app.post('/retweet',routes.retweet);
+app.post('/post',routes.post);
 app.get('/logout/twitter', routes.logout);
 app.get("/auth/twitter", passport.authenticate('twitter'));
 app.get("/auth/twitter/callback", passport.authenticate('twitter', {

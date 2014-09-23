@@ -53,6 +53,11 @@
         // reply form inside tweet
         observe: {
             func: function observe (stream){
+
+                function shortenDirectMessagePrefix(val) {
+                    return val.replace(/^d\s+\@?\w+\s/, ""); // remove direct message prefix
+                }
+
                 // when the user hit escape
                 $(document).bind("key:escape",function(e){
                     var target = $(e.target);
@@ -71,24 +76,54 @@
                     var val = status.val();
                      // too long for Twitter
                     if(val.length > TWEET_MAX_LENGTH) return false;
-                    // post to twitter
-                    $.ajax({
-                        type: 'POST',
-                        url: '/tweet',
-                        data: {
-                            'tweet': val
-                        },
-                        success: function(data){
+
+                    restAPI.post('tweet',val,function(data){
                             var textarea = form.find("textarea");
                             var val = textarea.data("init-val") || "";
                             textarea.val(val);
                             // { custom-event: status:send }
                             form.trigger("status:send");
-                        }
                     });
-
                     return false;
                 });
+                var last;
+                function updateCharCount (e) {
+                    var val = e.target.value;
+                    val = shortenDirectMessagePrefix(val);
+                    var length = val.length;
+            
+                    if(length != last) {
+                        var text = TWEET_MAX_LENGTH - length;
+                        if(text < 0) {
+                            text = '<span class="toolong">'+text+'</span>'
+                        }
+                        else if(text < 20) {
+                            text = '<span class="warn">'+text+'</span>'
+                        }
+                        $(e.target).closest("form").find(".characters").html( text );
+                        last = length;
+                    }
+                }
+          
+                $(document).delegate("form.status [name=status]", "keyup change paste", updateCharCount)
+          
+                // update count every N millis to catch any changes, though paste, auto complete, etc.
+                $(document).delegate("form.status [name=status]", "focus", function (e) {
+                    updateCharCount(e)
+                    var textarea = $(e.target);
+                    var interval = textarea.data("charUpdateInterval");
+                    if(interval) {
+                        clearInterval(interval);
+                    }
+                    textarea.data("charUpdateInterval", setInterval(function () { updateCharCount(e) }, 200));
+                    textarea.trigger("status:focus", [textarea]);
+                })
+                $(document).delegate("form.status [name=status]", "blur", function (e) {
+                    var interval = $(e.target).data("charUpdateInterval");
+                    if(interval) {
+                        clearInterval(interval);
+                    }
+                })
             }
         },
         replyForm: {
@@ -135,20 +170,11 @@
                         var tweet = li.data("tweet");
                         var id = tweet.data.id;
               
-                        // Post to twitter
-                        $.ajax({
-                            type: 'POST',
-                            url: '/retweet',
-                            data: {
-                                'tweet_id': id
-                            },
-                            success: function(data){
+                        restAPI.post('retweet',id,function(data){
                                 button.hide();
                                 $(document).trigger("status:retweet")  
-                            }
                         });
-                    }
-           
+                    }           
                 })
             }
         },
@@ -163,16 +189,9 @@
             
                     if(!tweet.deleted) {
                         if(confirm('Do you really want to delete this tweet?')) {
-                             $.ajax({
-                                type: 'POST',
-                                url: '/delete',
-                                data: {
-                                    'tweet_id': id
-                                },
-                                success: function(data){
-                                    $(document).trigger("status:delete");
-                                    button.remove();
-                                }
+                            restAPI.post('delete',id,function(data){
+                                $(document).trigger("status:delete");
+                                button.remove();
                             });
                         }
                     }
@@ -188,30 +207,16 @@
                 var id = tweet.data.id;
             
                 if(!tweet.data.favorited) {
-                    $.ajax({
-                        type: 'POST',
-                        url: '/favorite',
-                        data: {
-                            'tweet_id': id
-                        },
-                        success: function(data){
-                            $(document).trigger("status:favorite")
-                            tweet.data.favorited = true;
-                            li.addClass("starred");
-                        }
-                    });
-                } else {
-                     $.ajax({
-                        type: 'POST',
-                        url: '/unfavorite',
-                        data: {
-                            'tweet_id': id
-                        },
-                        success: function(data){
-                            $(document).trigger("status:favorite")
-                            tweet.data.favorited = true;
-                            li.removeClass("starred");
-                        }
+                    restAPI.post('favorite',id,function(data){
+                        $(document).trigger("status:favorite")
+                        tweet.data.favorited = true;
+                        li.addClass("starred");
+                     });
+                 } else {
+                    restAPI.post('unfavorite',id,function(data){
+                        $(document).trigger("status:favorite")
+                        tweet.data.favorited = true;
+                        li.removeClass("starred");
                     });
                 }
             })
