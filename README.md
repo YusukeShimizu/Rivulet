@@ -1,10 +1,10 @@
-Streamie_modification
+Candy
 ======================
 
 ## DESCRIPTION
 
-Streamie_modificationは、HTML/node.jsをベースとしたリアルタイム更新型のツイッタークライアントです。
-Malte UBLの作成した[Streamie](https://streamie.org/)(停止中)を基に、webアプリケーションフレームワークのデファクトスタンダードとなっている[express](http://expressjs.com/)を用いて再構築しています。
+Candyは、HTML/node.jsをベースとしたリアルタイム更新型のツイッタークライアントです。
+[Streamie](https://streamie.org/)(停止中)を基に、webアプリケーションフレームワークのデファクトスタンダードとなっている[express](http://expressjs.com/)を用いて再構築しています。
 
 https://github.com/cramforce/streamie
 
@@ -24,8 +24,8 @@ https://github.com/cramforce/streamie
 ## USAGE
 自身のPCをサーバーとして動作させることができます。以下を参考にしてください。
 
-    $ git clone https://github.com/YusukeShimizu/Streamie_modification.git
-    $ cd Streamie_modification
+    $ git clone https://github.com/YusukeShimizu/Candy.git
+    $ cd Candy
     $ vi config.json
     $ node app.js
 
@@ -45,6 +45,7 @@ https://github.com/cramforce/streamie
 ## TODO
 
 * socket.io settings
+* curation
 * Desktop notifications
 * i18n
 * correspond to mutability
