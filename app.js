@@ -92,9 +92,7 @@ server.listen(app.get('port'), function(){
 });
 
 // share session between socket.io and express
-io.configure(function(){
-	io.set('authorization', connection.handShake);
-});
+io.sockets.use(connection.handShake);
 
 // connect clients 
 io.sockets.on('connection', connection.connect);
