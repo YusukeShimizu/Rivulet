@@ -25,7 +25,6 @@
                 data = JSON.parse(data);
                 //user is now connected and authorization was fine
                 if(data.action == "auth_OK"){
-                    console.log(data)
                     $("#about").hide();
                     $("#header").show();
                     $(document).bind("tweet:first", function () {
@@ -51,7 +50,6 @@
                     tweet.data = data.tweet;
                     stream.process(tweet);
                 }else{
-                    console.log(data);
                 }
             }
             //connect to the backend system
