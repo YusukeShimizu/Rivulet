@@ -10,7 +10,7 @@
 
     //always use JSON
     function send(data){
-        socket.emit('message', JSON.stringify(data));
+        socket.json.emit('message', data);
     }
 
     // make this globally accessible
@@ -24,8 +24,7 @@
 
         var auth = 'no_auth';
         // check the connection status
-        socket.on('message', function(msg){
-            var data = JSON.parse(msg);
+        socket.on('message', function(data){
             console.log(data);
 
             if(data.action == 'auth_OK'){
@@ -63,7 +62,7 @@
         }
 
         confirm_interval = setInterval(confirm_connection, 5000);
-        auth_interval = setInterval(confirm_auth,360000);
+        auth_interval = setInterval(confirm_auth,500000);
         confirm_connection();
     }
     window.client = client;

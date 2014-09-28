@@ -124,6 +124,25 @@
                     }
                 })
             }     
+        },
+        currentTimelines: {
+            func: function currentTimelines(stream,plugin) {
+                restAPI.timeline('userTimeline',function(data){
+                    data.forEach(function(tweet){
+                        tweet.data = tweet;
+                        stream.process(tweet);      
+                    });
+                });
+                
+                /* What is the best way to show mentions?
+                restAPI.timeline('userMention',function(data){
+                    data.forEach(function(tweet){
+                        tweet.data = tweet;
+                        stream.process(tweet);      
+                    });
+                })
+                */
+            }
         }
     }
     window.initPlugins = [
@@ -132,6 +151,7 @@
         plugins.navigation,
         plugins.personalizeForCurrentUser,
         plugins.settingsDialog,
-        plugins.keyboardShortCuts
+        plugins.keyboardShortCuts,
+        plugins.currentTimelines
     ];
 })()

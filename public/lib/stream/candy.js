@@ -21,8 +21,6 @@
             location.hash = "";
 
             var connect = function(data){
-                //data always be JSON
-                data = JSON.parse(data);
                 //user is now connected and authorization was fine
                 if(data.action == "auth_OK"){
                     $("#about").hide();

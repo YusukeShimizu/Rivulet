@@ -77,15 +77,17 @@
                      // too long for Twitter
                     if(val.length > TWEET_MAX_LENGTH) return false;
 
-                    restAPI.post('tweet',val,function(data){
-                            var textarea = form.find("textarea");
-                            var val = textarea.data("init-val") || "";
-                            textarea.val(val);
-                            // { custom-event: status:send }
-                            form.trigger("status:send");
+                    // make the actual request
+                    restAPI.update('update',val,function(data){
+                        var textarea = form.find("textarea");
+                        var val = textarea.data("init-val") || "";
+                        textarea.val(val);
+                        // { custom-event: status:send }
+                        form.trigger("status:send");
                     });
                     return false;
                 });
+
                 var last;
                 function updateCharCount (e) {
                     var val = e.target.value;

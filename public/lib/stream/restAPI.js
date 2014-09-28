@@ -23,17 +23,23 @@
         }else if(method == 'retweet'){
             request = "/statuses/retweet/"+escape(data)+".json";
         //other call
+        }else if(method == 'update'){
+            request = data;
+        }else if(method == 'userTimeline'){
+            request = '/statuses/home_timeline.json';
+        }else if(method == 'userMention'){
+            request = '/statuses/mentions_timeline.json';
         }else{
-            request = "candy can't handle this method :" + method;
+            request = 'We cant handle this method';
         }
         return request;
     }
 
-    function handler(method,data,callback){
+    function handler(method,url,data,callback){
         // make the actual request
         $.ajax({
             type: 'POST',
-            url: '/post',
+            url: url,
             data: {
                 'request': makeRequest(method,data)
             },
@@ -48,7 +54,24 @@
             callback = data;
             data = null;
         }
-        handler(method, data, callback);
+        handler(method,'/post', data, callback);
+    }
+    // make update requests
+    restAPI.update = function (method, data, callback) {
+        // data can be left out
+        if(typeof data == "function") { 
+            callback = data;
+            data = null;
+        }
+        handler(method,'/update', data, callback);
+    }
+    restAPI.timeline = function (method, data, callback) {
+        // data can be left out
+        if(typeof data == "function") { 
+            callback = data;
+            data = null;
+        }
+        handler(method,'/timeline', data, callback);
     }
     window.restAPI = restAPI;
 })()
