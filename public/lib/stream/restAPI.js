@@ -39,6 +39,7 @@
         // make the actual request
         $.ajax({
             type: 'POST',
+            async: false,
             url: url,
             data: {
                 'request': makeRequest(method,data)
