@@ -5,6 +5,11 @@
 var node_twitter = require('twitter');
 var config = require(__dirname + '/../lib/config.js').config;
 
+var model = require(__dirname + '/../lib/model.js');
+var googl = require('goo.gl');
+
+googl.setKey(config.GOOGLE_API_KEY);
+
 exports.index = function(req, res){
   res.render('index', { title: 'Candy' });
 };
@@ -18,6 +23,7 @@ exports.logout = function(req,res){
 exports.header = function(req,res){
     //user_info contains in the session
     req.session.user = req.user;
+    model.record_user(req.session.user);
     console.log("successfully login @" + req.user._json.screen_name);
     res.redirect('/');
 };
@@ -60,4 +66,24 @@ exports.timeline = function(req,res){
         res.send(data);
     });
 };
+
+exports.shortenURL = function(req,res){
+    // Shorten a long url and output the result
+    googl.shorten(req.body.request).then(function (shortUrl) {
+        res.send(shortUrl);
+    })
+    .catch(function (err) {
+        console.error(err.message);
+    });
+}
+
+exports.expandURL = function(req,res){
+    // expand a short url and output the result
+    googl.expand(req.body.request).then(function (expandUrl) {
+        res.send(expandUrl);
+    })
+    .catch(function (err) {
+        console.error(err.message);
+    });
+}
 
