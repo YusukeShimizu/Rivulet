@@ -1,6 +1,3 @@
-/**
- * Module dependencies.
- */
 
 var express = module.exports = require('express');
 var routes = require(__dirname + '/routes');
@@ -70,10 +67,13 @@ app.use(express.bodyParser());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
-// development only
-if ('development' == app.get('env')) {
-    app.use(express.errorHandler());
-}
+// for uncaughtexeption
+app.use(express.errorHandler({ showStack: true, dumpExceptions: true }));
+app.use(function(err, req, res, next){
+    console.error(err.stack);
+    res.status(500);
+    res.render('500', {title: "Unknown err. Sorry :)"});
+})
 
 // main app routes
 app.get('/', routes.index);
@@ -82,6 +82,9 @@ app.get('/header', routes.header);
 app.post('/post',routes.post);
 app.post('/update',routes.update);
 app.post('/timeline',routes.timeline);
+app.post('/shortenURL',routes.shortenURL);
+// using bit ly for now
+//app.post('/expandURL',routes.expandURL);
 app.get('/logout/twitter', routes.logout);
 app.get("/auth/twitter", passport.authenticate('twitter'));
 app.get("/auth/twitter/callback", passport.authenticate('twitter', {
