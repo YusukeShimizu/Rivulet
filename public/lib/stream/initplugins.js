@@ -225,7 +225,7 @@
                             stream.process(tweet);      
                         });
                     }else{
-                        alert("Refresh! (ÅE3ÅE)can't get current timeLine.Sorry :(");
+                        alert("Refresh! (3)can't get current timeLine.Sorry :(");
                     }
                 });
                 

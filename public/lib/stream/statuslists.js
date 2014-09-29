@@ -78,12 +78,15 @@
                     if(val.length > TWEET_MAX_LENGTH) return false;
 
                     // make the actual request
-                    restAPI.update('update',val,function(data){
-                        var textarea = form.find("textarea");
-                        var val = textarea.data("init-val") || "";
-                        textarea.val(val);
-                        // { custom-event: status:send }
-                        form.trigger("status:send");
+                    restAPI.update('update',val,function(data,status){
+                        if(status == 'success'){
+                            var textarea = form.find("textarea");
+                            var val = textarea.data("init-val") || "";
+                            textarea.val(val);
+                            form.trigger("status:send");
+                        } else {
+                            alert("Posting the tweet failed. Sorry :(");
+                        }
                     });
                     return false;
                 });
@@ -128,6 +131,38 @@
                 })
             }
         },
+        // Shorten URLs in statuses
+        shortenURLs: {
+            func: function shortenURLs (stream) {
+                var RE = streamPlugins[7].GRUBERS_URL_RE;
+          
+                // listen to click on the shortenURLs buttons
+                $(document).delegate("form.status .shortenURLs", "click", function (e) {
+                    e.preventDefault();
+                    var form = $(this).closest("form.status");
+                    var input = form.find("[name=status]");
+                    var matches = input.val().match(RE);
+                    if(matches) {
+                        matches.forEach(function(longURL) {
+                            if(longURL.length > "http://j.mp/aYYiOl".length) {
+                                // make the actual request
+                                restAPI.shortenURL('shortenURL',longURL,function(shortURL,status){
+                                    if(status == "success"){
+                                        var text = input.val();
+                                        // replace actual status text
+                                        text = text.replace(longURL, shortURL);
+                                        input.val(text);
+                                        input.focus();
+                                    }else{
+                                         console.log("failed. Sorry :(" + longURL);
+                                    }
+                                });
+                            }
+                        })
+                    }
+                });
+            }
+        },
         replyForm: {
             func: function replyForm (stream) {
                 $(document).on("click","#stream .actions .reply",function (e) {
@@ -154,7 +189,6 @@
                     var tweet = li.data("tweet");
                     var form = getReplyForm(li);
                     form.find("[name=in_reply_to_status_id]").val(""); // no reply
-                    // make text. TODO: Style should be configurable
                     var text = tweet.data.text + " /via @"+tweet.data.user.screen_name
             
                     form.show();
@@ -172,9 +206,11 @@
                         var tweet = li.data("tweet");
                         var id = tweet.data.id;
               
-                        restAPI.post('retweet',id,function(data){
+                        restAPI.post('retweet',id,function(data,status){
+                            if(status == 'success'){
                                 button.hide();
-                                $(document).trigger("status:retweet")  
+                                $(document).trigger("status:retweet")
+                            }
                         });
                     }           
                 })
@@ -191,9 +227,11 @@
             
                     if(!tweet.deleted) {
                         if(confirm('Do you really want to delete this tweet?')) {
-                            restAPI.post('delete',id,function(data){
-                                $(document).trigger("status:delete");
-                                button.remove();
+                            restAPI.post('delete',id,function(data,status){
+                                if(status == "success"){
+                                    $(document).trigger("status:delete");
+                                    button.remove();
+                                }
                             });
                         }
                     }
@@ -209,16 +247,20 @@
                 var id = tweet.data.id;
             
                 if(!tweet.data.favorited) {
-                    restAPI.post('favorite',id,function(data){
-                        $(document).trigger("status:favorite")
-                        tweet.data.favorited = true;
-                        li.addClass("starred");
+                    restAPI.post('favorite',id,function(data,status){
+                        if(status == "success"){
+                            $(document).trigger("status:favorite")
+                            tweet.data.favorited = true;
+                            li.addClass("starred");
+                        }
                      });
                  } else {
-                    restAPI.post('unfavorite',id,function(data){
-                        $(document).trigger("status:favorite")
-                        tweet.data.favorited = true;
-                        li.removeClass("starred");
+                    restAPI.post('unfavorite',id,function(data,status){
+                        if(status == "success"){
+                            $(document).trigger("status:favorite")
+                            tweet.data.favorited = true;
+                            li.removeClass("starred");
+                        }
                     });
                 }
             })
@@ -228,6 +270,7 @@
 
     statuslists = [
         plugins.observe,
+        plugins.shortenURLs,
         plugins.replyForm,
         plugins.quote,
         plugins.retweet,

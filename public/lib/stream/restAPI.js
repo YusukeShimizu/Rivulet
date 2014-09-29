@@ -50,7 +50,7 @@
             data: {
                 'request': makeRequest(method,data)
             },
-            timeout : 2000,
+            timeout : 10000,
             success: callback,
             error: error
         });

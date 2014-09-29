@@ -8,7 +8,7 @@
     settings.registerKey("not work, for now", "longConversation", "Filter long (more than 3 tweets) conversations of others",  false);
     settings.registerNamespace("stream", "Stream");
     settings.registerKey("stream", "showRetweets", "Show Retweets",  true);
-    settings.registerKey("not work, for now", "keepScrollState", "Keep scroll level when new tweets come in",  true); 
+    settings.registerKey("stream", "keepScrollState", "Keep scroll level when new tweets come in",  true); 
 
     var Tweets = {};
 
@@ -121,6 +121,94 @@
                 this();
             }
         },
+        // Format text to HTML hotlinking, links, things that looks like links, scree names and hash tags
+        // Also filters out some more meta data and puts that on the tweet object. Currently: hashTags
+        formatTweetText: {
+            //from http://gist.github.com/492947 and http://daringfireball.net/2010/07/improved_regex_for_matching_urls
+            GRUBERS_URL_RE: /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?Å·Å‚ÅgÅhÅeÅf]))/ig,
+            SCREEN_NAME_RE: /(^|\W)\@([a-zA-Z0-9_]+)/g,
+            HASH_TAG_RE:    /(^|\s)\#(\S+)/g,
+            func: function formatTweetText (tweet, stream, plugin) {
+                var text = tweet.textHTML;
+                var urls;
+                if(tweet.data.entities) {
+                    urls = tweet.data.entities.urls; // Twitter sends parsed URLs through the new tweet entities.
+                }
+                text = text.replace(plugin.GRUBERS_URL_RE, function(url) {
+                    var displayURL = url;
+                    var targetURL = (/^\w+\:\//.test(url)?'':'http://') + url;
+                    // Check if there is a URL entity for this. If yes, use its display and target URL.
+                    urls.forEach(function(urlObj) {
+                        if(urlObj.url == url) {
+                            if(urlObj.display_url) {
+                                displayURL = urlObj.display_url;
+                            }
+                            if(urlObj.expanded_url) {
+                                targetURL = urlObj.expanded_url;
+                            }
+                        }
+                    });
+                    return '<a href="'+helpers.html(targetURL)+'">'+helpers.html(displayURL)+'</a>';
+                })
+					
+                // screen names
+                text = text.replace(plugin.SCREEN_NAME_RE, function (all, pre, name) {
+                    return pre+'<a href="http://twitter.com/'+name+'" class="user-href">@'+name+'</a>';
+                });
+                // hash tags
+                tweet.hashTags = [];
+                text = text.replace(plugin.HASH_TAG_RE, function (all, pre, tag) {
+                    tweet.hashTags.push(tag);
+                    return pre+'<a href="http://search.twitter.com/search?q='+encodeURIComponent(tag)+'" class="tag">#'+tag+'</a>';
+                });
+                tweet.textHTML = text;
+                this();
+            }
+        },
+        // runs the link plugins
+        executeLinkPlugins: {
+            func: function executeLinkPlugins (tweet, stream) {
+                var node = $("<div>"+tweet.textHTML+"</div>");
+                var as = node.find("a");
+          
+                as.each(function () {
+                    var a = $(this);
+                    stream.linkPlugins.forEach(function (plugin) {
+                        plugin.func.call(function () {}, a, tweet, stream, plugin);
+                    })
+                })
+          
+                tweet.textHTML = node.html();
+                this();
+            }
+        },
+        // Trigger a custom event to inform everyone about a new tweet
+        newTweetEvent: {
+            func: function newTweetEvent (tweet) {
+                // { custom-event: tweet:new }
+                tweet.node.trigger("tweet:new", [tweet])
+                this();
+            }
+        },
+        //when we insert the tweet
+        keepScrollState: {
+            WIN: $(window),
+            func: function keepScrollState (tweet,stream, plugin) {
+                var next = tweet.node.next();
+                if(next.length > 0){
+                    var height = next.offset().top - tweet.node.offset.top;
+                    tweet.height = height;
+                    if(settings.get("stream","keepScrollState")){
+                        var win = plugin.WIN;
+                        var cur = win.scrollTop();
+
+                        var top = cur + height;
+                        win.scrollTop(top);
+                    }
+                }
+                this();
+            }
+        },
         renderTemplate: {
             func: function renderTemplate(tweet,stream){
                 tweet.html = tweet.template({
@@ -167,8 +255,12 @@
         plugins.avoidDuplicates,
         plugins.template,
         plugins.htmlEncode,
+        plugins.formatTweetText,
+        plugins.executeLinkPlugins,
         plugins.renderTemplate,
         plugins.prepend,
+        plugins.keepScrollState,
+        plugins.newTweetEvent,
         plugins.canvasImage
     ];
 })()
