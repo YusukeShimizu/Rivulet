@@ -29,6 +29,8 @@
             request = '/statuses/home_timeline.json';
         }else if(method == 'userMention'){
             request = '/statuses/mentions_timeline.json';
+        }else if(method == 'shortenURL'){
+            request = data;
         }else{
             request = 'We cant handle this method';
         }
@@ -36,6 +38,10 @@
     }
 
     function handler(method,url,data,callback){
+        var error = function (xhr, status, errorThrown) {
+            console.log("[Twitter RestAPI Error] Status '"+xhr.statusText+"' URL: "+url+" Request Data "+ data); 
+            callback.apply(this, arguments); 
+        };
         // make the actual request
         $.ajax({
             type: 'POST',
@@ -44,7 +50,9 @@
             data: {
                 'request': makeRequest(method,data)
             },
-            success: callback 
+            timeout : 2000,
+            success: callback,
+            error: error
         });
     };
 
@@ -73,6 +81,14 @@
             data = null;
         }
         handler(method,'/timeline', data, callback);
+    }
+    restAPI.shortenURL = function (method, data, callback) {
+        // data can be left out
+        if(typeof data == "function") { 
+            callback = data;
+            data = null;
+        }
+        handler(method,'/shortenURL', data, callback);
     }
     window.restAPI = restAPI;
 })()

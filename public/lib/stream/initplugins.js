@@ -9,9 +9,9 @@
     settings.registerNamespace("not work, for now", "not work, for now")
     settings.registerKey("not work, for now", "curation_timeline", "show curated timeline(the Candy way)",  true);
     settings.registerNamespace("notifications", "Notifications");
-    settings.registerKey("not work, for now", "tweets", "Notify for new tweets (yellow icon)",  true);
-    settings.registerKey("not work, for now", "mentions", "Notify for new mentions (green icon)",  true);
-    settings.registerKey("not work, for now", "sound", "Play a sound for new tweets",  false);
+    settings.registerKey("notifications", "tweets", "Notify for new tweets (yellow icon)",  true);
+    settings.registerKey("notifications", "mentions", "Notify for new mentions (green icon)",  true);
+    settings.registerKey("notifications", "sound", "Play a sound for new tweets",  false);
 
     var plugins = {
         // allocate templates
@@ -49,11 +49,11 @@
                 change();
                 var scrollTimer;
                 function scrollTimeout() {
-                    window.Streamie_Just_Scrolled = false;
+                    window.Just_Scrolled = false;
                 }
                 win.bind("scroll", function () {
                     plugin.ScrollState[location.hash.replace(/^\#/, "") || "all"] = win.scrollTop();
-                    window.Streamie_Just_Scrolled = true;
+                    window.Just_Scrolled = true;
                     clearTimeout(scrollTimer);
                     scrollTimer = setTimeout(scrollTimeout, 1000);
                 });
@@ -98,6 +98,69 @@
                 });
             }
         },
+        signalNewTweets: {
+            func: function signalNewTweets(){
+                var win = $(window);
+                var dirty = win.scrollTop() > 0;
+                var newCount = 0;
+
+                function redraw(){
+                    var signal = newCount > 0 ? "("+newCount+")":"";
+                    document.title = document.title.replace(/^(?:\(\d+\) )*/, signal);
+                }
+
+                win.bind("scroll", function () {
+                    dirty = win.scrollTop() >0;
+                    if(!dirty){
+                        newCount = 0;
+                        setTimeout(function(){
+                            $(document).trigger("tweet:unread",[newCount]);
+                            $(document).trigger("notify:tweet:unread",[newCount]);
+                        },0);
+                    }
+                });
+                $(document).bind("notify:tweet:unread",function(){
+                    redraw();
+                });
+                $(document).bind("tweet:new",function(e,tweet){
+                    newCount++;
+                    $(document).trigger("tweet:unread", [newCount, tweet.mentioned]);
+                });
+            }
+        },
+        // change unread event into notify
+        throttableNotifactions: {
+            func: function throttableNotifactions () {
+                $(document).bind("tweet:unread", function (e, count, isMention) {
+                    function notify() {
+                        $(document).trigger("notify:tweet:unread", [count, isMention]);
+              
+                        if(settings.get('notifications', 'sound')) {
+                            var audio = $('<audio />')
+                            audio.attr({
+                                src: '/sounds/new_tweet.wav',
+                                autoplay: true
+                            });
+                            audio.hide();
+                            audio.bind('ended', function() {
+                                audio.remove()
+                            });
+           
+                            $('body').append(audio)
+                        }
+                    }
+                    if(isMention) {
+                        if(settings.get("notifications", "mentions")) {
+                            notify();
+                        }              
+                    } else {
+                        if(settings.get("notifications", "tweets")) {
+                            notify();
+                        }
+                    }
+                });
+            }
+        },
         personalizeForCurrentUser: {
             func: function personalizeForCurrentUser (stream,plugin) {
                 //display screenname
@@ -125,13 +188,45 @@
                 })
             }     
         },
+                // display state in the favicon
+        favicon: {        
+            func: function favicon (stream, plugin) {
+                var importantActive = false;
+                $(document).bind("notify:tweet:unread", function (e, count, isMention) {
+                    var url;
+                    if(count > 0) {
+                        url =  "images/candy-unread.ico";
+                        if(isMention) {
+                            url = "images/candy-mention.ico";
+                            importantActive = true;
+                        } else {
+                            if(importantActive) { // we should not change away
+                                return;
+                            }
+                        }
+                    } else {
+                        importantActive = false;
+                        url = "images/candy-empty.ico"; 
+                    }
+                    // remove the current favicon. Just changing the href doesnt work.
+                    var favicon = $("link[rel~=icon]")
+                    favicon.remove();
+                    // put in a new favicon
+                    $("head").append($('<link rel="shortcut icon" type="image/x-icon" href="'+url+'" />'));
+                })
+            }
+        },
         currentTimelines: {
             func: function currentTimelines(stream,plugin) {
-                restAPI.timeline('userTimeline',function(data){
-                    data.forEach(function(tweet){
-                        tweet.data = tweet;
-                        stream.process(tweet);      
-                    });
+                restAPI.timeline('userTimeline',function(data,status){
+                    if(status == "success"){
+                        data.forEach(function(tweet){
+                            tweet.data = tweet;
+                            stream.process(tweet);      
+                        });
+                    }else{
+                        alert("Refresh! (ÅE3ÅE)can't get current timeLine.Sorry :(");
+                    }
                 });
                 
                 /* What is the best way to show mentions?
@@ -149,6 +244,8 @@
         plugins.templates,
         plugins.hashState,
         plugins.navigation,
+        plugins.signalNewTweets,
+        plugins.throttableNotifactions,
         plugins.personalizeForCurrentUser,
         plugins.settingsDialog,
         plugins.keyboardShortCuts,
