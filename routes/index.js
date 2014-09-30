@@ -5,7 +5,7 @@
 var node_twitter = require('twitter');
 var config = require(__dirname + '/../lib/config.js').config;
 
-var model = require(__dirname + '/../lib/model.js');
+//var model = require(__dirname + '/../lib/model.js');
 var googl = require('goo.gl');
 
 googl.setKey(config.GOOGLE_API_KEY);
@@ -23,7 +23,7 @@ exports.logout = function(req,res){
 exports.header = function(req,res){
     //user_info contains in the session
     req.session.user = req.user;
-    model.record_user(req.session.user);
+  //  model.record_user(req.session.user);
     console.log("successfully login @" + req.user._json.screen_name);
     res.redirect('/');
 };

@@ -222,6 +222,7 @@
                     if(status == "success"){
                         data.forEach(function(tweet){
                             tweet.data = tweet;
+                            tweet.prefill = true;
                             stream.process(tweet);      
                         });
                     }else{

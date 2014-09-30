@@ -74,6 +74,26 @@
                 }
             }
         },
+        // marks a tweet whether we've ever seen it before using localStorage
+        everSeen: {
+            func: function everSeen (tweet, stream) {
+                var key = "tweet"+tweet.data.id;
+                if(window.localStorage) {
+                    keyValueStore.Store("screen_names").set("@"+tweet.data.user.screen_name, 1);
+                    if(window.localStorage[key]) {
+                       tweet.seenBefore = true;
+                    } else {
+                        window.localStorage[key] = 1;
+                    }
+                    var data = tweet.retweet ? tweet.retweet : tweet.data;
+                    var newest = stream.newestTweet();
+                    if(data.id > newest) {
+                        stream.newestTweet(data.id);
+                    }
+                }
+                this();
+            }
+        },
         // find all mentions in a tweet. set tweet.mention to true 
         mentions : {
             regex: /(^|\W)\@([a-zA-Z0-9_]+)/g,
@@ -125,7 +145,7 @@
         // Also filters out some more meta data and puts that on the tweet object. Currently: hashTags
         formatTweetText: {
             //from http://gist.github.com/492947 and http://daringfireball.net/2010/07/improved_regex_for_matching_urls
-            GRUBERS_URL_RE: /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?Å·Å‚ÅgÅhÅeÅf]))/ig,
+            GRUBERS_URL_RE: /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>??a?a?g?h?e?f]))/ig,
             SCREEN_NAME_RE: /(^|\W)\@([a-zA-Z0-9_]+)/g,
             HASH_TAG_RE:    /(^|\s)\#(\S+)/g,
             func: function formatTweetText (tweet, stream, plugin) {
@@ -251,6 +271,7 @@
         plugins.stringIDs,
         plugins.handleRetweet,
         plugins.tweetsOnly,
+        plugins.everSeen,
         plugins.mentions,
         plugins.avoidDuplicates,
         plugins.template,
