@@ -134,7 +134,7 @@
         // Shorten URLs in statuses
         shortenURLs: {
             func: function shortenURLs (stream) {
-                var RE = streamPlugins[7].GRUBERS_URL_RE;
+                var RE = /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>??a?a?g?h?e?f]))/ig;
           
                 // listen to click on the shortenURLs buttons
                 $(document).delegate("form.status .shortenURLs", "click", function (e) {

@@ -216,7 +216,7 @@
             func: function keepScrollState (tweet,stream, plugin) {
                 var next = tweet.node.next();
                 if(next.length > 0){
-                    var height = next.offset().top - tweet.node.offset.top;
+                    var height = next.offset().top - tweet.node.offset().top;
                     tweet.height = height;
                     if(settings.get("stream","keepScrollState")){
                         var win = plugin.WIN;

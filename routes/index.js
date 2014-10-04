@@ -11,7 +11,7 @@ var googl = require('goo.gl');
 googl.setKey(config.GOOGLE_API_KEY);
 
 exports.index = function(req, res){
-  res.render('index', { title: 'Candy' });
+  res.render('index', { title: 'Rivulet' });
 };
 
 exports.logout = function(req,res){

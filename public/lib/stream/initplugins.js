@@ -11,7 +11,7 @@
     settings.registerNamespace("notifications", "Notifications");
     settings.registerKey("notifications", "tweets", "Notify for new tweets (yellow icon)",  true);
     settings.registerKey("notifications", "mentions", "Notify for new mentions (green icon)",  true);
-    settings.registerKey("notifications", "sound", "Play a sound for new tweets",  false);
+    settings.registerKey("not work, for now", "sound", "Play a sound for new tweets",  false);
 
     var plugins = {
         // allocate templates
@@ -105,7 +105,7 @@
                 var newCount = 0;
 
                 function redraw(){
-                    var signal = newCount > 0 ? "("+newCount+")":"";
+                    var signal = newCount > 0 ? "("+newCount+") ":"";
                     document.title = document.title.replace(/^(?:\(\d+\) )*/, signal);
                 }
 
@@ -195,9 +195,9 @@
                 $(document).bind("notify:tweet:unread", function (e, count, isMention) {
                     var url;
                     if(count > 0) {
-                        url =  "images/candy-unread.ico";
+                        url =  "images/Rivulet_green.ico";
                         if(isMention) {
-                            url = "images/candy-mention.ico";
+                            url = "images/Rivulet_yellow.ico";
                             importantActive = true;
                         } else {
                             if(importantActive) { // we should not change away
@@ -206,7 +206,7 @@
                         }
                     } else {
                         importantActive = false;
-                        url = "images/candy-empty.ico"; 
+                        url = "images/Rivulet_empty.ico"; 
                     }
                     // remove the current favicon. Just changing the href doesnt work.
                     var favicon = $("link[rel~=icon]")
@@ -249,6 +249,7 @@
         plugins.throttableNotifactions,
         plugins.personalizeForCurrentUser,
         plugins.settingsDialog,
+        plugins.favicon,
         plugins.keyboardShortCuts,
         plugins.currentTimelines
     ];
