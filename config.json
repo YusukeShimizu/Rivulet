@@ -1,12 +1,12 @@
 {
     "TWITTER_CONSUMER_KEY": "GfuY2Rjy3v2pI7RkUUmnQ",
     "TWITTER_CONSUMER_SECRET": "X2BgKMo8ojFpV6vdFIV4sbURqkLe6COg6tEE5yOuo0",
-    "callbackURL": "http://localhost:3000/auth/twitter/callback",
+    "callbackURL": "http://localhost:5000/auth/twitter/callback",
     "MEMORY_STORE": "secret",
     "GOOGLE_API_KEY": "AIzaSyBuYtjU-oCGPo355j8xMoz6fxNkvE8gfg0",
     "MYSQL_HOST": "localhost",
-    "MYSQL_USER": "root",
-    "MYSQL_PASSWORD": "tk514173337",
+    "MYSQL_USER": "YusukeShimizu",
+    "MYSQL_PASSWORD": "candy",
     "MYSQL_DBNAME": "candy_twitter",
     "port": 5000
 }
