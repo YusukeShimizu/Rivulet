@@ -1,4 +1,3 @@
-
 var express = module.exports = require('express');
 var routes = require(__dirname + '/routes');
 var user = require(__dirname + '/routes/user');
@@ -15,7 +14,8 @@ var server = http.createServer(app);
 
 // using socket.io
 var io = require('socket.io').listen(server);
-var sessionStore = new express.session.MemoryStore();
+var MySQLSessionStore = require('connect-mysql-session')(express);
+var sessionStore = new MySQLSessionStore(config.MYSQL_DBNAME, config.MYSQL_USER, config.MYSQL_PASSWORD, {});
 var cookieParser = express.cookieParser("cookieParser");
 var connection = require(__dirname + '/lib/connection.js');
 
@@ -58,7 +58,7 @@ app.use(express.methodOverride());
 app.use(cookieParser);
 app.use(express.session({
     secret: "cookieParser",
-    store : sessionStore
+    store : sessionStore,
 }));
 app.use(passport.initialize());
 app.use(passport.session()); 
