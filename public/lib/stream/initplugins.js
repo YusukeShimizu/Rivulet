@@ -220,13 +220,13 @@
             func: function currentTimelines(stream,plugin) {
                 restAPI.timeline('userTimeline',function(data,status){
                     if(status == "success"){
-                        data.forEach(function(tweet){
+                        data.reverse().forEach(function(tweet){
                             tweet.data = tweet;
                             tweet.prefill = true;
                             stream.process(tweet);      
                         });
                     }else{
-                        alert("Refresh! (3)can't get current timeLine.Sorry :(");
+                        alert("Refresh! Can't get current timeLine.Sorry(>3<)");
                     }
                 });
                 
