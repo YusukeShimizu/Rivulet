@@ -21,7 +21,7 @@
                 a.attr('id', 'href' + index++);
             }
         },
-        untiny{
+        untiny: {
             domains: UntinyDomains, 
             func: function untiny(a, tweet, stream, plugin) {
                 // disable for JSConf

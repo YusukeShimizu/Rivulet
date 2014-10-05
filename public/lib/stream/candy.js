@@ -14,6 +14,13 @@
 
         //using jquery
         $(function(){
+
+            $('#showMoreInfo').click(function(e) {
+                e.preventDefault();
+                $(this).remove();
+                $('#moreinfo').show();
+            })
+
             //stream use plugins with asynchronous way
             stream.addPlugins(streamPlugins);
             //stream.addLinkPlugins(linkPlugins);
