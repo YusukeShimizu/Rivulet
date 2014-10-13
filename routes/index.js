@@ -4,14 +4,13 @@
 
 var node_twitter = require('twitter');
 var config = require(__dirname + '/../lib/config.js').config;
-
-var model = require(__dirname + '/../lib/model.js');
 var googl = require('goo.gl');
+var model = require(__dirname + '/../lib/model.js');
 
 googl.setKey(config.GOOGLE_API_KEY);
 
 exports.index = function(req, res){
-  res.render('index', { title: 'Rivulet' });
+  res.render('index', { title: 'Candy' });
 };
 
 exports.logout = function(req,res){
@@ -76,14 +75,3 @@ exports.shortenURL = function(req,res){
         console.error(err.message);
     });
 }
-
-exports.expandURL = function(req,res){
-    // expand a short url and output the result
-    googl.expand(req.body.request).then(function (expandUrl) {
-        res.send(expandUrl);
-    })
-    .catch(function (err) {
-        console.error(err.message);
-    });
-}
-
