@@ -219,11 +219,12 @@
                     var height = next.offset().top - tweet.node.offset().top;
                     tweet.height = height;
                     if(settings.get("stream","keepScrollState")){
-                        var win = plugin.WIN;
-                        var cur = win.scrollTop();
-
-                        var top = cur + height;
-                        win.scrollTop(top);
+                        if(!tweet.prefill){
+                            var win = plugin.WIN;
+                            var cur = win.scrollTop();
+                            var top = cur + height;
+                            win.scrollTop(top);
+                        }
                     }
                 }
                 this();

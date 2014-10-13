@@ -241,31 +241,80 @@
         // Click on favorite button
         favorite: {
             func: function favorite (stream) {
-            $(document).delegate("#stream .actions .favorite", "click", function (e) {
-                var li = $(this).parents("li");
-                var tweet = li.data("tweet");
-                var id = tweet.data.id;
+                $(document).delegate("#stream .actions .favorite", "click", function (e) {
+                    var li = $(this).parents("li");
+                    var tweet = li.data("tweet");
+                    var id = tweet.data.id;
             
-                if(!tweet.data.favorited) {
-                    restAPI.post('favorite',id,function(data,status){
-                        if(status == "success"){
-                            $(document).trigger("status:favorite")
-                            tweet.data.favorited = true;
-                            li.addClass("starred");
-                        }
-                     });
-                 } else {
-                    restAPI.post('unfavorite',id,function(data,status){
-                        if(status == "success"){
-                            $(document).trigger("status:favorite")
-                            tweet.data.favorited = true;
-                            li.removeClass("starred");
-                        }
+                    if(!tweet.data.favorited) {
+                        restAPI.post('favorite',id,function(data,status){
+                            if(status == "success"){
+                                $(document).trigger("status:favorite")
+                                tweet.data.favorited = true;
+                                li.addClass("starred");
+                            }
+                        });
+                    } else {
+                        restAPI.post('unfavorite',id,function(data,status){
+                            if(status == "success"){
+                                $(document).trigger("status:favorite")
+                                tweet.data.favorited = true;
+                                li.removeClass("starred");
+                            }
+                        });
+                    }
+                })
+            }
+        },
+        // calculate the age of the tweets and update it
+        age: {
+            func: function age (tweet) {
+                function update() {
+                    if(window.Streamie_Just_Scrolled) { // never draw while scrolling
+                        return;
+                    }
+                    $('#stream').children().each(function() {
+                        var tweet = $(this).data('tweet');
+            
+                        var millis = (new Date()).getTime() - tweet.created_at.getTime();
+          
+                        tweet.age = millis;
+                        var units   = {
+                            second: Math.round(millis/1000),
+                            minute: Math.round(millis/1000/60),
+                            hour:   Math.round(millis/1000/60/60),
+                            day:    Math.round(millis/1000/60/60/24),
+                            week:   Math.round(millis/1000/60/60/24/7),
+                            month:  Math.round(millis/1000/60/60/24/30), // aproximately
+                            year:   Math.round(millis/1000/60/60/24/365), // aproximately
+                        };
+                        var txt = "";
+                        for(var unit in units) { 
+                            var val = units[unit];
+                            if(val > 0) {
+                                txt = "";
+                                var u = val + " " + unit;
+                                if(val > 1) {
+                                    u = u + "s";
+                                }
+                                txt = u;
+                            }
+                        };
+          
+                        if(tweet.node) {
+                            var created_at = tweet.node.data('_age_created_at');
+                            if(!created_at) {
+                                created_at = tweet.node.find(".created_at a");
+                                tweet.node.data('_age_created_at', created_at);
+                            }
+                            created_at.text(txt);
+                        }   
                     });
                 }
-            })
+                update()
+                setInterval(update, 5000)
+            }
         }
-    }
     }
 
     statuslists = [
@@ -275,7 +324,8 @@
         plugins.quote,
         plugins.retweet,
         plugins.deleteStatus,
-        plugins.favorite
+        plugins.favorite,
+        plugins.age
     ];
 
 
