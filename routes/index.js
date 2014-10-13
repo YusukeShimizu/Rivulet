@@ -60,8 +60,19 @@ exports.timeline = function(req,res){
         access_token_key: req.user.twitter_token,
         access_token_secret: req.user.twitter_token_secret
     })
-    .get(req.body.request.query,{count:30}, function(data){
-        console.log(data);
+    .get(req.body.request.query,{count:req.body.request.count}, function(data){
+        res.send(data);
+    });
+};
+
+exports.oldTimeline = function(req,res){
+    var twitter = new node_twitter({
+        consumer_key: config.TWITTER_CONSUMER_KEY,
+        consumer_secret: config.TWITTER_CONSUMER_SECRET,
+        access_token_key: req.user.twitter_token,
+        access_token_secret: req.user.twitter_token_secret
+    })
+    .get(req.body.request.query,{max_id:req.body.request.max_id,count:100}, function(data){
         res.send(data);
     });
 };

@@ -82,6 +82,7 @@ app.get('/header', routes.header);
 app.post('/post',routes.post);
 app.post('/update',routes.update);
 app.post('/timeline',routes.timeline);
+app.post('/oldTimeline',routes.oldTimeline);
 app.post('/shortenURL',routes.shortenURL);
 // using bit ly for now
 //app.post('/expandURL',routes.expandURL);

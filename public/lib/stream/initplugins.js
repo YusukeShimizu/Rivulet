@@ -110,7 +110,7 @@
                 }
 
                 win.bind("scroll", function () {
-                    dirty = win.scrollTop() >0;
+                    dirty = win.scrollTop() > 0;
                     if(!dirty){
                         newCount = 0;
                         setTimeout(function(){
@@ -218,20 +218,40 @@
         },
         currentTimelines: {
             func: function currentTimelines(stream,plugin) {
-                restAPI.use('userTimeline',"timeline", function(data,status){
-                    if(status == "success"){
-                        data.reverse().forEach(function(tweet){
-                            tweet.data = tweet;
-                            tweet.prefill = true;
-                            stream.process(tweet);      
-                        });
-                    }else{
-                        alert("Refresh! Can't get current timeLine. Sorry(>3<)");
-                    }
-                });
-                
+                // retain the oldest tweet_id
+                var max_id;
+                setTimeout(function showCurrentTimelines(){
+                    restAPI.use('userTimeline','/timeline',20, function(data,status){
+                        if(status == "success"){
+                            data.reverse().forEach(function(tweet){
+                                tweet.data = tweet;
+                                tweet.prefill = true;
+                                stream.process(tweet);      
+                            });
+                            max_id = data.pop().id_str;
+                        }else{
+                            alert("Refresh! Can't get current timeLine. Sorry(>3<)");
+                        }
+                    });
+                },1000);
+
                 var win = $(window);
-                function getpreviousTimeLine(){console.log("I'm bottom")};
+                function getpreviousTimeLine(){
+                    restAPI.use('oldTimeline','/oldTimeline',max_id, function(data,status){
+                        if(status == "success"){
+                            data.forEach(function(tweet){
+                                tweet.data = tweet;
+                                tweet.past = true;
+                                tweet.prefill = true;
+                                stream.process(tweet);      
+                            });
+                            max_id = data.pop().id_str;
+                        }else{
+                            alert("Reload! Can't get past timeLine. Sorry(>3<)");
+                        }
+                    });
+
+                };
 
                 // show old timeline when user scroll bottom
                 win.on("scroll", function(){

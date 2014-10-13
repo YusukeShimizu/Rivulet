@@ -206,7 +206,9 @@
         newTweetEvent: {
             func: function newTweetEvent (tweet) {
                 // { custom-event: tweet:new }
-                tweet.node.trigger("tweet:new", [tweet])
+                if(!tweet.prefill) {
+                    tweet.node.trigger("tweet:new", [tweet])
+                }
                 this();
             }
         },
@@ -247,7 +249,11 @@
                 tweet.node = $(tweet.html);
                 //give access
                 tweet.node.data("tweet",tweet);
-                stream.canvas().prepend(tweet.node);
+                if(tweet.past){
+                    stream.canvas().append(tweet.node);
+                }else{
+                    stream.canvas().prepend(tweet.node);
+                }
                 this();
             }
         },

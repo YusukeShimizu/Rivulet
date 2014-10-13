@@ -27,6 +27,10 @@
             request.query = data;
         }else if(method == 'userTimeline'){
             request.query = '/statuses/home_timeline.json';
+            request.count = data;
+        }else if(method == 'oldTimeline'){
+            request.query = '/statuses/home_timeline.json';
+            request.max_id = data;
         }else if(method == 'userMention'){
             request.query = '/statuses/mentions_timeline.json';
         }else if(method == 'shortenURL'){
