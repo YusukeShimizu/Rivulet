@@ -218,7 +218,7 @@
         },
         currentTimelines: {
             func: function currentTimelines(stream,plugin) {
-                restAPI.timeline('userTimeline',function(data,status){
+                restAPI.use('userTimeline',"timeline", function(data,status){
                     if(status == "success"){
                         data.reverse().forEach(function(tweet){
                             tweet.data = tweet;
@@ -226,18 +226,21 @@
                             stream.process(tweet);      
                         });
                     }else{
-                        alert("Refresh! Can't get current timeLine.Sorry(>3<)");
+                        alert("Refresh! Can't get current timeLine. Sorry(>3<)");
                     }
                 });
                 
-                /* What is the best way to show mentions?
-                restAPI.timeline('userMention',function(data){
-                    data.forEach(function(tweet){
-                        tweet.data = tweet;
-                        stream.process(tweet);      
-                    });
-                })
-                */
+                var win = $(window);
+                function getpreviousTimeLine(){console.log("I'm bottom")};
+
+                // show old timeline when user scroll bottom
+                win.on("scroll", function(){
+                    var scrollHeight = $(document).height();
+                    var scrollPosition = win.height() + win.scrollTop();
+	                if ((scrollHeight - scrollPosition) / scrollHeight === 0) {
+	                    getpreviousTimeLine();
+	                }
+                });
             }
         }
     }

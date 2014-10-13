@@ -78,7 +78,7 @@
                     if(val.length > TWEET_MAX_LENGTH) return false;
 
                     // make the actual request
-                    restAPI.update('update',val,function(data,status){
+                    restAPI.use('update',"/update", val,function(data,status){
                         if(status == 'success'){
                             var textarea = form.find("textarea");
                             var val = textarea.data("init-val") || "";
@@ -146,7 +146,7 @@
                         matches.forEach(function(longURL) {
                             if(longURL.length > "http://j.mp/aYYiOl".length) {
                                 // make the actual request
-                                restAPI.shortenURL('shortenURL',longURL,function(shortURL,status){
+                                restAPI.use('shortenURL', "shortenURL", longURL,function(shortURL,status){
                                     if(status == "success"){
                                         var text = input.val();
                                         // replace actual status text
@@ -206,7 +206,7 @@
                         var tweet = li.data("tweet");
                         var id = tweet.data.id;
               
-                        restAPI.post('retweet',id,function(data,status){
+                        restAPI.use('retweet',"/post", id,function(data,status){
                             if(status == 'success'){
                                 button.hide();
                                 $(document).trigger("status:retweet")
@@ -227,7 +227,7 @@
             
                     if(!tweet.deleted) {
                         if(confirm('Do you really want to delete this tweet?')) {
-                            restAPI.post('delete',id,function(data,status){
+                            restAPI.use('delete',"/post", id,function(data,status){
                                 if(status == "success"){
                                     $(document).trigger("status:delete");
                                     button.remove();
@@ -247,7 +247,7 @@
                     var id = tweet.data.id;
             
                     if(!tweet.data.favorited) {
-                        restAPI.post('favorite',id,function(data,status){
+                        restAPI.use('favorite',"/post", id,function(data,status){
                             if(status == "success"){
                                 $(document).trigger("status:favorite")
                                 tweet.data.favorited = true;
@@ -255,7 +255,7 @@
                             }
                         });
                     } else {
-                        restAPI.post('unfavorite',id,function(data,status){
+                        restAPI.use('unfavorite',"/post", id,function(data,status){
                             if(status == "success"){
                                 $(document).trigger("status:favorite")
                                 tweet.data.favorited = true;

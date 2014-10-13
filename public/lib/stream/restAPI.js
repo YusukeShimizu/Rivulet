@@ -6,33 +6,33 @@
     var restAPI = {};
 
     function makeRequest(method,data){
-        var request;
+        var request = {};
         //update dtatus
         if(method == 'tweet'){
-            request = "/statuses/update.json?status="+ data;
+            request.query = "/statuses/update.json?status="+ data;
         //favorite 
         }else if(method == 'favorite'){
-            request = "/favorites/create.json?id="+escape(data);
+            request.query = "/favorites/create.json?id="+escape(data);
         //destroy favorite
         }else if(method == 'unfavorite'){
-            request = "/favorites/destroy.json?id="+escape(data);
+            request.query = "/favorites/destroy.json?id="+escape(data);
         //destroy tweet
         }else if(method == 'delete'){
-            request = "/statuses/destroy/"+escape(data)+".json";
+            request.query = "/statuses/destroy/"+escape(data)+".json";
         //retweet
         }else if(method == 'retweet'){
-            request = "/statuses/retweet/"+escape(data)+".json";
+            request.query = "/statuses/retweet/"+escape(data)+".json";
         //other call
         }else if(method == 'update'){
-            request = data;
+            request.query = data;
         }else if(method == 'userTimeline'){
-            request = '/statuses/home_timeline.json';
+            request.query = '/statuses/home_timeline.json';
         }else if(method == 'userMention'){
-            request = '/statuses/mentions_timeline.json';
+            request.query = '/statuses/mentions_timeline.json';
         }else if(method == 'shortenURL'){
-            request = data;
+            request.query = data;
         }else{
-            request = 'We cant handle this method';
+            request.query = 'We cant handle this method';
         }
         return request;
     }
@@ -56,39 +56,13 @@
         });
     };
 
-    // make post requests
-    restAPI.post = function (method, data, callback) {
+    restAPI.use = function (method, route, data, callback) {
         // data can be left out
         if(typeof data == "function") { 
             callback = data;
             data = null;
         }
-        handler(method,'/post', data, callback);
-    }
-    // make update requests
-    restAPI.update = function (method, data, callback) {
-        // data can be left out
-        if(typeof data == "function") { 
-            callback = data;
-            data = null;
-        }
-        handler(method,'/update', data, callback);
-    }
-    restAPI.timeline = function (method, data, callback) {
-        // data can be left out
-        if(typeof data == "function") { 
-            callback = data;
-            data = null;
-        }
-        handler(method,'/timeline', data, callback);
-    }
-    restAPI.shortenURL = function (method, data, callback) {
-        // data can be left out
-        if(typeof data == "function") { 
-            callback = data;
-            data = null;
-        }
-        handler(method,'/shortenURL', data, callback);
+        handler(method,route, data, callback);
     }
     window.restAPI = restAPI;
 })()

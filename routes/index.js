@@ -34,7 +34,7 @@ exports.update = function(req,res){
         access_token_key: req.user.twitter_token,
         access_token_secret: req.user.twitter_token_secret
     })
-    .updateStatus(req.body.request, function(data){
+    .updateStatus(req.body.request.query, function(data){
         console.log(data);  
     });
     res.redirect('/');
@@ -47,7 +47,7 @@ exports.post = function(req,res){
         access_token_key: req.user.twitter_token,
         access_token_secret: req.user.twitter_token_secret
     })
-    .post(req.body.request, function(data){
+    .post(req.body.request.query, function(data){
         console.log(data);  
     });
     res.redirect('/');
@@ -60,7 +60,7 @@ exports.timeline = function(req,res){
         access_token_key: req.user.twitter_token,
         access_token_secret: req.user.twitter_token_secret
     })
-    .get(req.body.request,{include_entities:true}, function(data){
+    .get(req.body.request.query,{count:30}, function(data){
         console.log(data);
         res.send(data);
     });
@@ -68,7 +68,7 @@ exports.timeline = function(req,res){
 
 exports.shortenURL = function(req,res){
     // Shorten a long url and output the result
-    googl.shorten(req.body.request).then(function (shortUrl) {
+    googl.shorten(req.body.request.query).then(function (shortUrl) {
         res.send(shortUrl);
     })
     .catch(function (err) {
