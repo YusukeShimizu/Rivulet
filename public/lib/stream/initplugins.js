@@ -229,13 +229,21 @@
                                 stream.process(tweet);      
                             });
                             max_id = data.pop().id_str;
+                            // show old timeline when user scroll bottom
+                            var win = $(window);
+                            win.on("scroll", function(){
+                                var scrollHeight = $(document).height();
+                                var scrollPosition = win.height() + win.scrollTop();
+	                            if ((scrollHeight - scrollPosition) / scrollHeight === 0) {
+	                                getpreviousTimeLine();
+	                            }
+                            });
                         }else{
                             alert("Refresh! Can't get current timeLine. Sorry(>3<)");
                         }
                     });
                 },1000);
 
-                var win = $(window);
                 function getpreviousTimeLine(){
                     restAPI.use('oldTimeline','/oldTimeline',max_id, function(data,status){
                         if(status == "success"){
@@ -252,15 +260,6 @@
                     });
 
                 };
-
-                // show old timeline when user scroll bottom
-                win.on("scroll", function(){
-                    var scrollHeight = $(document).height();
-                    var scrollPosition = win.height() + win.scrollTop();
-	                if ((scrollHeight - scrollPosition) / scrollHeight === 0) {
-	                    getpreviousTimeLine();
-	                }
-                });
             }
         }
     }
