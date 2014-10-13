@@ -10,7 +10,7 @@ var model = require(__dirname + '/../lib/model.js');
 googl.setKey(config.GOOGLE_API_KEY);
 
 exports.index = function(req, res){
-  res.render('index', { title: 'Candy' });
+  res.render('index', { title: 'Rivulet' });
 };
 
 exports.logout = function(req,res){

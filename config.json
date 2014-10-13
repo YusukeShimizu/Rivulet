@@ -5,7 +5,7 @@
     "MEMORY_STORE": "secret",
     "GOOGLE_API_KEY": "AIzaSyBuYtjU-oCGPo355j8xMoz6fxNkvE8gfg0",
     "connect_MYSQL": true,
-    "MYSQL_HOST": "rdscandydb01.cnrh9equdn0d.ap-northeast-1.rds.amazonaws.com",
+    "MYSQL_HOST": "localhost",
     "MYSQL_USER": "YusukeShimizu",
     "MYSQL_PASSWORD": "candy",
     "MYSQL_DBNAME": "candy_twitter",
