@@ -85,7 +85,7 @@
                             textarea.val(val);
                             form.trigger("status:send");
                         } else {
-                            alert("Posting the tweet failed. Sorry :(");
+                            sweetAlert("Oops...","Posting the tweet failed. Sorry :(","error");
                         }
                     });
                     return false;
@@ -200,7 +200,15 @@
         retweet: {
             func: function retweet (stream) {
                 $(document).delegate("#stream .actions .retweet", "click", function (e) {
-                    if(confirm("Do you really want to retweet?")) {
+                    swal({   
+                        title: "Are you sure?",
+                        text: "This will be retweeted",   
+                        type: "warning",  
+                        showCancelButton: true,   
+                        confirmButtonColor: "#DD6B55",   
+                        confirmButtonText: "Yes, retweet it!",   
+                        closeOnConfirm: false 
+                    }, function(){   
                         var button = $(this);
                         var li = button.parents("li");
                         var tweet = li.data("tweet");
@@ -212,7 +220,7 @@
                                 $(document).trigger("status:retweet")
                             }
                         });
-                    }           
+                    })           
                 })
             }
         },
@@ -226,14 +234,29 @@
                     var id = tweet.data.id;
             
                     if(!tweet.deleted) {
-                        if(confirm('Do you really want to delete this tweet?')) {
-                            restAPI.use('delete',"/post", id,function(data,status){
-                                if(status == "success"){
-                                    $(document).trigger("status:delete");
-                                    button.remove();
-                                }
-                            });
-                        }
+                        swal({   
+                            title: "Are you sure?",   
+                            text: "Your will not be able to recover!",
+                            type: "warning",   
+                            showCancelButton: true,   
+                            confirmButtonColor: "#DD6B55",   
+                            confirmButtonText: "Yes, delete it!",   
+                            cancelButtonText: "No, cancel plx!",   
+                            closeOnConfirm: false,   
+                            closeOnCancel: false
+                        }, function(isConfirm){   
+                            if (isConfirm) {     
+                                restAPI.use('delete',"/post", id,function(data,status){
+                                    if(status == "success"){
+                                        $(document).trigger("status:delete");
+                                        button.remove();
+                                        swal("Deleted!", "Your tweet has been deleted.", "success");   
+                                    }
+                                });
+                            } else {     
+                                swal("Cancelled", "Your imaginary file is safe :)", "error");   
+                            } 
+                        });
                     }
                 })
             }

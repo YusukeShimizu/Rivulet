@@ -7,6 +7,8 @@
         document.write('<script src="/js/jquery-2.1.1.js"></script>');
         //modernizr 1.5(http://modernizr.com/)
         document.write('<script src="ext/modernizr.js"></script>');
+        //sweet-alert(http://tristanedwards.me/sweetalert)
+        document.write('<script src="ext/sweet-alert.js"></script>');
     };
     scriptsLoader.body = function(){
         //Underscore.js 1.6.0(http://underscorejs.org)

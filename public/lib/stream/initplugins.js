@@ -228,6 +228,7 @@
                                 tweet.prefill = true;
                                 stream.process(tweet);      
                             });
+                            stream.canvas().append($(templates.loading));
                             max_id = data.pop().id_str;
                             // show old timeline when user scroll bottom
                             var win = $(window);
@@ -239,7 +240,7 @@
 	                            }
                             });
                         }else{
-                            alert("Refresh! Can't get current timeLine. Sorry(>3<)");
+                            sweetAlert("Refresh!", "Can't get current timeLine. Sorry(>3<)","error");
                         }
                     });
                 },1000);
@@ -253,9 +254,10 @@
                                 tweet.prefill = true;
                                 stream.process(tweet);      
                             });
+                            stream.canvas().append($(templates.loading));
                             max_id = data.pop().id_str;
                         }else{
-                            alert("Reload! Can't get past timeLine. Sorry(>3<)");
+                            sweetAlert("Reload!", "Can't get past timeLine. Sorry(>3<)","error");
                         }
                     });
 
