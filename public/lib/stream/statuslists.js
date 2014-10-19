@@ -298,40 +298,41 @@
                     }
                     $('#stream').children().each(function() {
                         var tweet = $(this).data('tweet');
-            
-                        var millis = (new Date()).getTime() - tweet.created_at.getTime();
-          
-                        tweet.age = millis;
-                        var units   = {
-                            second: Math.round(millis/1000),
-                            minute: Math.round(millis/1000/60),
-                            hour:   Math.round(millis/1000/60/60),
-                            day:    Math.round(millis/1000/60/60/24),
-                            week:   Math.round(millis/1000/60/60/24/7),
-                            month:  Math.round(millis/1000/60/60/24/30), // aproximately
-                            year:   Math.round(millis/1000/60/60/24/365), // aproximately
-                        };
-                        var txt = "";
-                        for(var unit in units) { 
-                            var val = units[unit];
-                            if(val > 0) {
-                                txt = "";
-                                var u = val + " " + unit;
-                                if(val > 1) {
-                                    u = u + "s";
+                        if(tweet){ 
+                            var millis = (new Date()).getTime() - tweet.created_at.getTime();
+                        
+                            tweet.age = millis;
+                            var units   = {
+                                second: Math.round(millis/1000),
+                                minute: Math.round(millis/1000/60),
+                                hour:   Math.round(millis/1000/60/60),
+                                day:    Math.round(millis/1000/60/60/24),
+                                week:   Math.round(millis/1000/60/60/24/7),
+                                month:  Math.round(millis/1000/60/60/24/30), // aproximately
+                                year:   Math.round(millis/1000/60/60/24/365), // aproximately
+                            };
+                            var txt = "";
+                            for(var unit in units) { 
+                                var val = units[unit];
+                                if(val > 0) {
+                                    txt = "";
+                                    var u = val + " " + unit;
+                                    if(val > 1) {
+                                        u = u + "s";
+                                    }
+                                    txt = u;
                                 }
-                                txt = u;
+                            };
+              
+                            if(tweet.node) {
+                                var created_at = tweet.node.data('_age_created_at');
+                                if(!created_at) {
+                                    created_at = tweet.node.find(".created_at a");
+                                    tweet.node.data('_age_created_at', created_at);
+                                }
+                                created_at.text(txt);
                             }
-                        };
-          
-                        if(tweet.node) {
-                            var created_at = tweet.node.data('_age_created_at');
-                            if(!created_at) {
-                                created_at = tweet.node.find(".created_at a");
-                                tweet.node.data('_age_created_at', created_at);
-                            }
-                            created_at.text(txt);
-                        }   
+                        }
                     });
                 }
                 update()

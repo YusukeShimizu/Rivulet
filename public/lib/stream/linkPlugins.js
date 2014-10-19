@@ -1,3 +1,4 @@
+
 /* 
  * transform the link or images in tweet
  * short URL expanding, image preview
@@ -5,25 +6,16 @@
 
 (function(){
     var linkPlugins = {};
-    var UntinyDomains = ["bit.ly"];
-
-    $.get("/untiny/1.0/services/?format=json&bla=35", function(data, textStatus) {
-        if(textStatus == "success" && data) {
-            UntinyDomains.push.apply(UntinyDomains, Object.keys(data));
-        }
-    }, 'json');
-
     var index = 0;
 
     linkPlugins = {
         id: {
-            func: function untiny(a, tweet, stream, plugin) {
+            func: function expandURL(a, tweet, stream, plugin) {
                 a.attr('id', 'href' + index++);
             }
         },
-        untiny: {
-            domains: UntinyDomains, 
-            func: function untiny(a, tweet, stream, plugin) {
+        untiny: { 
+            func: function expandURL(a, tweet, stream, plugin) {
                 // disable for JSConf
                 return; 
                 var prefixLength = "http://".length;
@@ -33,10 +25,9 @@
                 for(var i = 0, len = domains.length; i < len; ++i) {
                     var domain = domains[i];
                     if(href.indexOf(domain) === prefixLength) {
-                        var url = "/untiny/1.0/extract/?url="+encodeURIComponent(href)+"&format=json";
-                        $.get(url, function(data, textStatus) {
-                            if(textStatus == "success") {
-                                if(data && data.org_url) {
+                        restAPI.use('expandURL','/expandURL',encodeURIComponent(href),function(data,status){
+                            if(status == 'success'){
+                                if(data) {
                                     var a = $('#'+id);
                                     a.attr('data-tiny-href', href);
                                     a.attr('href', data.org_url);
@@ -44,7 +35,7 @@
                                     console.log('Untiny error ', data)
                                 }
                             }
-                        }, 'json');
+                        );
                         break;
                     }
                 }

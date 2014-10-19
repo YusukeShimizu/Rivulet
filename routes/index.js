@@ -1,7 +1,3 @@
-/*
- * GET home page.
- */
-
 var node_twitter = require('twitter');
 var config = require(__dirname + '/../lib/config.js').config;
 var googl = require('goo.gl');
@@ -81,6 +77,16 @@ exports.shortenURL = function(req,res){
     // Shorten a long url and output the result
     googl.shorten(req.body.request.query).then(function (shortUrl) {
         res.send(shortUrl);
+    })
+    .catch(function (err) {
+        console.error(err.message);
+    });
+}
+
+exports.expandURL = function(req,res){
+    // Shorten a long url and output the result
+    googl.expand(req.body.request.query).then(function (longUrl) {
+        res.send(longUrl);
     })
     .catch(function (err) {
         console.error(err.message);
