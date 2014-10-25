@@ -22,7 +22,7 @@
         document.write('<script src="/lib/stream/settings.js"></script>');
         document.write('<script src="/lib/stream/client.js"></script>');
         document.write('<script src="/lib/stream/initplugins.js"></script>');
-        // document.write('<script src="/lib/stream/linkPlugins.js"></script>');
+        document.write('<script src="/lib/stream/linkPlugins.js"></script>');
         document.write('<script src="/lib/stream/tracking.js"></script>');
         document.write('<script src="/lib/stream/statuslists.js"></script>');
         document.write('<script src="/lib/stream/streamPlugins.js"></script>');

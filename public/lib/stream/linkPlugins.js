@@ -8,37 +8,30 @@
     var linkPlugins = {};
     var index = 0;
 
-    linkPlugins = {
+    plugins = {
         id: {
             func: function expandURL(a, tweet, stream, plugin) {
                 a.attr('id', 'href' + index++);
             }
         },
-        untiny: { 
+        expandURL: { 
             func: function expandURL(a, tweet, stream, plugin) {
                 // disable for JSConf
                 return; 
                 var prefixLength = "http://".length;
                 var href = a.attr("href") || "";
                 var id = a.attr('id');
-                var domains = plugin.domains;
-                for(var i = 0, len = domains.length; i < len; ++i) {
-                    var domain = domains[i];
-                    if(href.indexOf(domain) === prefixLength) {
-                        restAPI.use('expandURL','/expandURL',encodeURIComponent(href),function(data,status){
-                            if(status == 'success'){
-                                if(data) {
-                                    var a = $('#'+id);
-                                    a.attr('data-tiny-href', href);
-                                    a.attr('href', data.org_url);
-                                } else {
-                                    console.log('Untiny error ', data)
-                                }
-                            }
-                        );
-                        break;
+                restAPI.use('expandURL','/expandURL',encodeURIComponent(href),function(data,status){
+                    if(status == 'success'){
+                        if(data) {
+                            var a = $('#'+id);
+                            a.attr('data-tiny-href', href);
+                            a.attr('href', data.org_url);
+                        } else {
+                            console.log('Untiny error ', data)
+                        }
                     }
-                }
+                });
             }
         },
         imagePreview: {
@@ -78,5 +71,9 @@
             }
         }
     }
-    window.linkPlugins = linkPlugins;
+    window.linkPlugins = [
+        //plugins.id,
+        //plugins.expandURL,
+        plugins.imagePreview
+    ];
 })()

@@ -23,7 +23,7 @@
 
             //stream use plugins with asynchronous way
             stream.addPlugins(streamPlugins);
-            //stream.addLinkPlugins(linkPlugins);
+            stream.addLinkPlugins(linkPlugins);
             //App don't maintain any important state
             location.hash = "";
 
