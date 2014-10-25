@@ -9,6 +9,8 @@
         document.write('<script src="ext/modernizr.js"></script>');
         //sweet-alert(http://tristanedwards.me/sweetalert)
         document.write('<script src="ext/sweet-alert.js"></script>');
+        //use google api
+        document.write('<script src="https://apis.google.com/js/client.js?onload=load"></script>');
     };
     scriptsLoader.body = function(){
         //Underscore.js 1.6.0(http://underscorejs.org)

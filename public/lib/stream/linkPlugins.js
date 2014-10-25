@@ -8,30 +8,42 @@
     var linkPlugins = {};
     var index = 0;
 
-    plugins = {
+    var plugins = {
         id: {
             func: function expandURL(a, tweet, stream, plugin) {
                 a.attr('id', 'href' + index++);
             }
         },
-        expandURL: { 
+        setKey: {
+            func: function setKey(){
+                // We assume that these can be public so they are in the repo.
+                gapi.client.setApiKey("AIzaSyBuYtjU-oCGPo355j8xMoz6fxNkvE8gfg0");
+            }
+        },
+        googl: { 
             func: function expandURL(a, tweet, stream, plugin) {
                 // disable for JSConf
                 return; 
                 var prefixLength = "http://".length;
                 var href = a.attr("href") || "";
                 var id = a.attr('id');
-                restAPI.use('expandURL','/expandURL',encodeURIComponent(href),function(data,status){
-                    if(status == 'success'){
-                        if(data) {
-                            var a = $('#'+id);
-                            a.attr('data-tiny-href', href);
-                            a.attr('href', data.org_url);
-                        } else {
-                            console.log('Untiny error ', data)
-                        }
+                var domains = plugin.domains;
+                for(var i = 0, len = domains.length; i < len; ++i) {
+                    var domain = domains[i];
+                    if(href.indexOf(domain) === prefixLength) {
+                        gapi.client.load("urlshortner","v1", function(){
+                            gapi.client.urlshortner.url.get({"shortUrl":encodeURIComponent(href)}).execute(function(data){
+                                if(data.error) {
+                                    console.log('google API error ', data)
+                                } else {
+                                    var a = $('#'+id);
+                                    a.attr('data-tiny-href', href);
+                                    a.attr('href', data.org_url);
+                                }
+                            })
+                        })
                     }
-                });
+                }
             }
         },
         imagePreview: {
@@ -72,8 +84,9 @@
         }
     }
     window.linkPlugins = [
-        //plugins.id,
-        //plugins.expandURL,
+        plugins.id,
+        plugins.setKey,
+        plugins.googl,
         plugins.imagePreview
     ];
 })()

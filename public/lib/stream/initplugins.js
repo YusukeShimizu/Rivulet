@@ -235,7 +235,7 @@
                             win.on("scroll", function(){
                                 var scrollHeight = $(document).height();
                                 var scrollPosition = win.height() + win.scrollTop();
-	                            if ((scrollHeight - scrollPosition) / scrollHeight === 0) {
+	                            if ((scrollHeight - scrollPosition) / scrollHeight <= 0.05) {
 	                                getpreviousTimeLine();
 	                            }
                             });
@@ -248,6 +248,7 @@
                 function getpreviousTimeLine(){
                     restAPI.use('oldTimeline','/oldTimeline',max_id, function(data,status){
                         if(status == "success"){
+                            stream.canvas(".loading").remove();
                             data.forEach(function(tweet){
                                 tweet.data = tweet;
                                 tweet.past = true;
