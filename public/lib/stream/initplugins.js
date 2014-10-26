@@ -220,48 +220,61 @@
             func: function currentTimelines(stream,plugin) {
                 // retain the oldest tweet_id
                 var max_id;
+                var loading = false;
                 setTimeout(function showCurrentTimelines(){
                     restAPI.use('userTimeline','/timeline',20, function(data,status){
                         if(status == "success"){
-                            data.reverse().forEach(function(tweet){
-                                tweet.data = tweet;
-                                tweet.prefill = true;
-                                stream.process(tweet);      
-                            });
-                            stream.canvas().append($(templates.loading));
-                            max_id = data.pop().id_str;
-                            // show old timeline when user scroll bottom
-                            var win = $(window);
-                            win.on("scroll", function(){
-                                var scrollHeight = $(document).height();
-                                var scrollPosition = win.height() + win.scrollTop();
-	                            if ((scrollHeight - scrollPosition) / scrollHeight <= 0.05) {
-	                                getpreviousTimeLine();
-	                            }
-                            });
+                            if(data.data){
+                                sweetAlert("Wait a minutes!", "You reach the api remit(>3<)","error");
+                            }else{
+                                data.reverse().forEach(function(tweet){
+                                    tweet.data = tweet;
+                                    tweet.prefill = true;
+                                    stream.process(tweet);      
+                                });
+                                stream.canvas().append($(templates.loading));
+                                max_id = data.pop().id_str;
+                                // show old timeline when user scroll bottom
+                                var win = $(window);
+                                win.on("scroll", function(){
+                                    var scrollHeight = $(document).height();
+                                    var scrollPosition = win.height() + win.scrollTop();
+                                    if ((scrollHeight - scrollPosition) / scrollHeight === 0) {
+                                        if(!loading){
+                                            loading = true;
+                                            getpreviousTimeLine();
+                                        }
+                                    }
+                                });
+                            }
                         }else{
                             sweetAlert("Refresh!", "Can't get current timeLine. Sorry(>3<)","error");
                         }
+                        
                     });
                 },1000);
 
                 function getpreviousTimeLine(){
                     restAPI.use('oldTimeline','/oldTimeline',max_id, function(data,status){
                         if(status == "success"){
-                            stream.canvas(".loading").remove();
-                            data.forEach(function(tweet){
-                                tweet.data = tweet;
-                                tweet.past = true;
-                                tweet.prefill = true;
-                                stream.process(tweet);      
-                            });
-                            stream.canvas().append($(templates.loading));
-                            max_id = data.pop().id_str;
+                            if(data.data){
+                                sweetAlert("Wait a minutes!", "You reach the api remit(>3<)","error");
+                            }else{
+                                    data.forEach(function(tweet){
+                                    tweet.data = tweet;
+                                    tweet.past = true;
+                                    tweet.prefill = true;
+                                    stream.process(tweet);      
+                                });
+                                stream.canvas().children(".loading").remove();
+                                stream.canvas().append($(templates.loading));
+                                max_id = data.pop().id_str;
+                                loading = false;
+                            }
                         }else{
                             sweetAlert("Reload!", "Can't get past timeLine. Sorry(>3<)","error");
                         }
                     });
-
                 };
             }
         }

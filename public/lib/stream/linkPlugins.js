@@ -23,27 +23,21 @@
         googl: { 
             func: function expandURL(a, tweet, stream, plugin) {
                 // disable for JSConf
-                return; 
+                //return; 
                 var prefixLength = "http://".length;
                 var href = a.attr("href") || "";
                 var id = a.attr('id');
-                var domains = plugin.domains;
-                for(var i = 0, len = domains.length; i < len; ++i) {
-                    var domain = domains[i];
-                    if(href.indexOf(domain) === prefixLength) {
-                        gapi.client.load("urlshortner","v1", function(){
-                            gapi.client.urlshortner.url.get({"shortUrl":encodeURIComponent(href)}).execute(function(data){
-                                if(data.error) {
-                                    console.log('google API error ', data)
-                                } else {
-                                    var a = $('#'+id);
-                                    a.attr('data-tiny-href', href);
-                                    a.attr('href', data.org_url);
-                                }
-                            })
-                        })
-                    }
-                }
+                gapi.client.load("urlshortener","v1", function(){
+                    gapi.client.urlshortener.url.get({"shortUrl":href}).execute(function(data){
+                        if(data.error) {
+                            console.log('google API error ', data)
+                        } else {
+                            var a = $('#'+id);
+                            a.attr('data-tiny-href', href);
+                            a.attr('href', data.longUrl);
+                        }
+                    })
+                })
             }
         },
         imagePreview: {
