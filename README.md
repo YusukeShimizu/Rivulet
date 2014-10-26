@@ -3,10 +3,8 @@ Rivulet
 
 ## DESCRIPTION
 
-Rivuletã¯ã€HTML/node.jsã‚’ãƒ™ãƒ¼ã‚¹ã¨ã—ãŸãƒªã‚¢ãƒ«ã‚¿ã‚¤ãƒ æ›´æ–°å‹ã®ãƒ„ã‚¤ãƒƒã‚¿ãƒ¼ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã§ã™ã€‚
-[Streamie](https://streamie.org/)(åœæ­¢ä¸­)ã‚’åŸºã«ã€webã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¯ãƒ¼ã‚¯ã®ãƒ‡ãƒ•ã‚¡ã‚¯ãƒˆã‚¹ã‚¿ãƒ³ãƒ€ãƒ¼ãƒ‰ã¨ãªã£ã¦ã„ã‚‹[express](http://expressjs.com/)ã‚’ç”¨ã„ã¦å†æ§‹ç¯‰ã—ã¦ã„ã¾ã™ã€‚
-
-https://github.com/cramforce/streamie
+Rivulet‚ÍAHTML/node.js‚ğƒx[ƒX‚Æ‚µ‚½ƒŠƒAƒ‹ƒ^ƒCƒ€XVŒ^‚ÌƒcƒCƒbƒ^[ƒNƒ‰ƒCƒAƒ“ƒg‚Å‚·B
+webƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒtƒŒ[ƒ€ƒ[ƒN‚Ìƒfƒtƒ@ƒNƒgƒXƒ^ƒ“ƒ_[ƒh‚Æ‚È‚Á‚Ä‚¢‚é[express](http://expressjs.com/)‚ğ—p‚¢‚Ä\’z‚µ‚Ä‚¢‚Ü‚·B
 
 ### Stuff
 
@@ -22,37 +20,37 @@ https://github.com/cramforce/streamie
 9. [underscore.js version 1.6.0](http://underscorejs.org/)
       
 ## USAGE
-è‡ªèº«ã®PCã‚’ã‚µãƒ¼ãƒãƒ¼ã¨ã—ã¦å‹•ä½œã•ã›ã‚‹ã“ã¨ãŒã§ãã¾ã™ã€‚ä»¥ä¸‹ã‚’å‚è€ƒã«ã—ã¦ãã ã•ã„ã€‚
+©g‚ÌPC‚ğƒT[ƒo[‚Æ‚µ‚Ä“®ì‚³‚¹‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·BˆÈ‰º‚ğQl‚É‚µ‚Ä‚­‚¾‚³‚¢B
 
     $ git clone https://github.com/YusukeShimizu/Rivulet.git
     $ cd Rivult
     $ vi config.json
     $ node app.js
 
-ãŠä½¿ã„ã®ãƒ–ãƒ©ã‚¦ã‚¶ã§ã€
+‚¨g‚¢‚Ìƒuƒ‰ƒEƒU‚ÅA
 
 > [http://localhost:5000/](http://localhost:5000/)
 
-ã«ã‚¢ã‚¯ã‚»ã‚¹ã—ã¦ãã ã•ã„ã€‚
+‚ÉƒAƒNƒZƒX‚µ‚Ä‚­‚¾‚³‚¢B
 
 ### Note
 
-* [nodejs.org](http://nodejs.org/)ã‚ˆã‚Šã€node.js v0.10.xã‚’ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã—ã¦ãã ã•ã„ã€‚
-* ã‚¯ãƒ­ãƒ¼ãƒ³ã™ã‚‹ã«ã¯[Git Hub](https://github.com/)ã‚¢ã‚«ã‚¦ãƒ³ãƒˆãŒå¿…è¦ã¨ãªã‚Šã¾ã™ã€‚
-* Consumer Key/SecretãŒå¿…è¦ã§ã™ã€‚[https://dev.twitter.com/](https://dev.twitter.com/)ã‚ˆã‚Šå–å¾—å¯èƒ½ã§ã™ã€‚
-
+* [nodejs.org](http://nodejs.org/)‚æ‚èAnode.js v0.10.x‚ğƒCƒ“ƒXƒg[ƒ‹‚µ‚Ä‚­‚¾‚³‚¢B
+* ƒNƒ[ƒ“‚·‚é‚É‚Í[Git Hub](https://github.com/)ƒAƒJƒEƒ“ƒg‚ª•K—v‚Æ‚È‚è‚Ü‚·B
+* Consumer Key/Secret‚ª•K—v‚Å‚·B[https://dev.twitter.com/](https://dev.twitter.com/)‚æ‚èæ“¾‰Â”\‚Å‚·B
+* MySQL‚É‚æ‚ésessionŠÇ—‚ğs‚Á‚Ä‚¢‚Ü‚·B[MySQL](http://www-jp.mysql.com/)‚æ‚èŠÂ‹«‚ğ—pˆÓ‚µ‚Ä‚­‚¾‚³‚¢B
  
 ## TODO
 
 * Desktop notifications
 * i18n
 * correspond to mutability
-* reconnect 
 
 ## <a name = LICENCE></a>LICENCE
 Simplified BSD License
 Copyright 2014 Yusuke Shimizu. All rights reserved.
 
 ## <a name = AUTHOR></a>AUTHOR
-[Yusuke Shimizu](http://twitter.com/Bruwbird) 
+Yusuke Shimizu
+
 
