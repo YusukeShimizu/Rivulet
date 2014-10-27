@@ -59,16 +59,12 @@
             domains: ["img.ly", "twitpic.com", "yfrog", "imgur.com", "i.imgur.com"],
             func: function imagePreview (a, tweet, stream, plugin) { // a is a jQuery object of the a-tag
                 var prefixLength = "http://".length;
-                var href = a.attr("href") || "";
-                var domains = plugin.domains;
-                for(var i = 0, len = domains.length; i < len; ++i) {
-                    var domain = domains[i];
-                    if(href.indexOf(domain) === prefixLength) {
-                        var url = parseUri(href);
-                        var trans = plugin.transformations[domain] || plugin.transformations.standard;
-                        var previewURL = trans.call(plugin.transformations, url);
+                for (key in tweet.data.entities){
+                    if(key == "media"){
+                        var media = tweet.data.entities.media[0];
+                        var href = media.media_url;
                         var image = new Image();
-                        image.src = previewURL;
+                        image.src = href;
                         var div = $('<span class="image-preview"/>');
                         div.append(image)
                         a.addClass("image").append(div);
@@ -80,7 +76,7 @@
     window.linkPlugins = [
         plugins.id,
         plugins.setKey,
-        plugins.googl,
+        //plugins.googl,
         plugins.imagePreview
     ];
 })()

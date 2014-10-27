@@ -9,6 +9,7 @@
         document.write('<script src="ext/modernizr.js"></script>');
         //sweet-alert(http://tristanedwards.me/sweetalert)
         document.write('<script src="ext/sweet-alert.js"></script>');
+        document.write('<script src="ext/parseUri.js"></script>');
         //use google api
         document.write('<script src="https://apis.google.com/js/client.js?onload=load"></script>');
     };

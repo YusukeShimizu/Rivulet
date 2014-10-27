@@ -56,7 +56,7 @@ exports.timeline = function(req,res){
         access_token_key: req.user.twitter_token,
         access_token_secret: req.user.twitter_token_secret
     })
-    .get(req.body.request.query,{count:req.body.request.count}, function(data){
+    .get(req.body.request.query,{count:req.body.request.count,include_entities:true}, function(data){
         res.send(data);
     });
 };
@@ -68,7 +68,7 @@ exports.oldTimeline = function(req,res){
         access_token_key: req.user.twitter_token,
         access_token_secret: req.user.twitter_token_secret
     })
-    .get(req.body.request.query,{max_id:req.body.request.max_id,count:100}, function(data){
+    .get(req.body.request.query,{max_id:req.body.request.max_id,count:100,include_entities:true}, function(data){
         res.send(data);
     });
 };
