@@ -82,13 +82,3 @@ exports.shortenURL = function(req,res){
         console.error(err.message);
     });
 }
-
-exports.expandURL = function(req,res){
-    // Shorten a long url and output the result
-    googl.expand(req.body.request.query).then(function (longUrl) {
-        res.send(longUrl);
-    })
-    .catch(function (err) {
-        console.error(err.message);
-    });
-}

@@ -4,7 +4,6 @@
  * I always have jQuery and underscore.js everwhere
  */
 
-//The immediate function pattern to make modules 
 (function(){
     var candy = {};
     var initial = true;

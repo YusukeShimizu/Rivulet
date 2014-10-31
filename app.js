@@ -84,7 +84,6 @@ app.post('/update',routes.update);
 app.post('/timeline',routes.timeline);
 app.post('/oldTimeline',routes.oldTimeline);
 app.post('/shortenURL',routes.shortenURL);
-//app.post('/expandURL',routes.expandURL);
 app.get('/logout/twitter', routes.logout);
 app.get("/auth/twitter", passport.authenticate('twitter'));
 app.get("/auth/twitter/callback", passport.authenticate('twitter', {

@@ -239,11 +239,9 @@
                                 win.on("scroll", function(){
                                     var scrollHeight = $(document).height();
                                     var scrollPosition = win.height() + win.scrollTop();
-                                    if ((scrollHeight - scrollPosition) / scrollHeight === 0) {
-                                        if(!loading){
-                                            loading = true;
-                                            getpreviousTimeLine();
-                                        }
+                                    if ((scrollHeight - scrollPosition) / scrollHeight === 0 && !loading) {
+                                        loading = true;
+                                        getpreviousTimeLine();
                                     }
                                 });
                             }
@@ -260,7 +258,7 @@
                             if(data.data){
                                 sweetAlert("Wait a minutes!", "You reach the api remit(>3<)","error");
                             }else{
-                                    data.forEach(function(tweet){
+                                data.forEach(function(tweet){
                                     tweet.data = tweet;
                                     tweet.past = true;
                                     tweet.prefill = true;
