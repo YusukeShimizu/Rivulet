@@ -15,7 +15,9 @@ var server = http.createServer(app);
 // using socket.io
 var io = require('socket.io').listen(server);
 var MySQLSessionStore = require('connect-mysql-session')(express);
-var sessionStore = new MySQLSessionStore(config.MYSQL_DBNAME, config.MYSQL_USER, config.MYSQL_PASSWORD, {});
+var sessionStore = new MySQLSessionStore(config.MYSQL_DBNAME, config.MYSQL_USER, config.MYSQL_PASSWORD, {
+    "defaultExpiration": 1000*60*60*24*7
+});
 var cookieParser = express.cookieParser("cookieParser");
 var connection = require(__dirname + '/lib/connection.js');
 
