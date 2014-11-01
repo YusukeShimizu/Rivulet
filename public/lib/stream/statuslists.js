@@ -65,6 +65,15 @@
                         target.trigger("close");
                     }
                 });
+                // when user click the background
+                $(".status").click(function(e) {
+                    e.stopPropagation();
+                });
+
+                $(".status").click(function(e) {
+                    $(".status").hide();
+                });
+
                 $(document).delegate("form.status .close", "click", function (e) {
                     e.preventDefault();
                     $(this).trigger("close");

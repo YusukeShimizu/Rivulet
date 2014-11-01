@@ -10,10 +10,17 @@
         $("#settings").removeClass("show");
     }
 
+    // make this globally accesible
+    settingsDialog.hide = function(){
+        hide();
+    }
+
     function show(){
         visible = true;
         $("#settings").addClass("show");
-        var test =  $("#settings").addClass("show");
+        if($("#mainstatus").hasClass("show")){
+            $("#mainstatus").removeClass("show");
+        }
     }
 
     function draw(){

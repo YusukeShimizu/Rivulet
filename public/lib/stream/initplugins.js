@@ -80,6 +80,7 @@
                         if($("#mainstatus").hasClass("show")) {
                             $("#mainstatus").removeClass("show");
                         } else {
+                            settingsDialog.hide();
                             $("#mainstatus").addClass("show");
                             // Needs to be aligned after the .slide transition. Setting focus immeditately
                             // delays the transition by about 2 seconds in Chrome.
