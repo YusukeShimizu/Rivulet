@@ -11,6 +11,8 @@
     settings.registerKey("stream", "keepScrollState", "Keep scroll level when new tweets come in",  true); 
 
     var Tweets = {};
+    var Conversations = {};
+    var ConversationCounter = 0;
 
     plugins = {
         // Twitter changed some of the IDs to have a second variant that is represented
@@ -124,6 +126,52 @@
                 }
             }
         },
+        // group the tweet into conversation
+        // by tracking the root node of conversation
+        conversations: {
+            func: function conversations(tweet, stream, plugin) {
+                var id = tweet.data.id;
+                var in_reply_to = tweet.data.in_reply_to_status_id;
+                if(tweet.data._conversation) {
+                    tweet.conversation = Conversations[id] = tweet.data._conversation
+                }
+                else if(Conversations[id]){
+                    tweet.conversation = Conversations[id];
+                }
+                else if(Conversations[in_reply_to]){
+                    tweet.conversation = Conversations[id] = Conversations[in_reply_to];
+                }
+                else{
+                    tweet.conversation = Conversations[id] = {
+                        index: ConversationCounter++,
+                        tweets: 0,
+                        authors: {}
+                    };
+                    if(in_reply_to){
+                        Conversations[in_reply_to] = tweet.conversation;
+                    }
+                }
+                tweet.conversation.tweets++;
+                tweet.conversation.authors[tweet.data.user.screen_name] = true;
+
+                tweet.fetchNotInStream = function(cb){
+                    var in_reply_to = tweet.data.in_reply_to_status_id;
+                    if(in_reply_to && "!Tweets[in_reply_to]"){
+                        restAPI.use("reply", "/reply", in_reply_to, function(data){
+                            if(data){
+                                data._after = tweet;
+                                data._conversation = tweet.conversation;
+                                stream.process(data);
+                                if(cb){
+                                    cb(data);
+                                }
+                            }
+                        })
+                    }
+                };
+                this();
+            }
+        },      
         //set the template
         template: {
             func: function template(tweet,stream){
@@ -281,6 +329,7 @@
         plugins.everSeen,
         plugins.mentions,
         plugins.avoidDuplicates,
+        plugins.conversations,
         plugins.template,
         plugins.htmlEncode,
         plugins.formatTweetText,

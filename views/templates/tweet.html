@@ -1,5 +1,5 @@
 <% var h = helpers.html; %>
-    <li class="tweet<%= tweet.retweet ? ' retweet' : ''%><%= tweet.mentioned ? ' mention' : ''%>">
+    <li class="tweet<%= tweet.retweet ? ' retweet' : ''%><%= tweet.conversation ? ' conversation'+tweet.conversation.index : ''%><%= tweet.mentioned ? ' mention' : ''%>">
 	    <a href = "http://twitter.com/<%= h(tweet.data.user.screen_name) %>" class="user-href">
 		    <canvas data-src="<%= h(tweet.data.user.profile_image_url_https) %>" alt="<%= h(tweet.data.user.name) %>" width="48" height="48" class="profile_image_url" />
         </a>
@@ -35,6 +35,11 @@
                     <a href="<%= h('http://twitter.com/'+tweet.data.user.screen_name+'/status/'+tweet.id)%>">
                     </a>
                 </div>
+                <% if(tweet.data.in_reply_to_status_id) { %>
+                    <div class="in_reply_to_screen_nam">
+                        <a href="http://twitter.com/<%= h(tweet.data.in_reply_to_screen_name) %>/status/<%=h(tweet.data.in_reply_to_status_id)%>" class="conversation" title="Show conversation">in a conversation with <%=h(tweet.data.in_reply_to_screen_name) %></a>
+                    </div>
+                <% } %>
             </div>
         </div>
 	</li>

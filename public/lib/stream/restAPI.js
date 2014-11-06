@@ -35,8 +35,9 @@
             request.query = '/statuses/mentions_timeline.json';
         }else if(method == 'shortenURL'){
             request.query = data;
-        }else if(method == 'expandURL'){
-            request.query = data;
+        }else if(method == 'reply'){
+            request.query = '/statuses/show.json';
+            request.id = data;
         }else{
             request.query = 'We cant handle this method';
         }

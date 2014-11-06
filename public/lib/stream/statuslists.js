@@ -298,6 +298,31 @@
                 })
             }
         },
+
+        // show all tweets from conversation
+        conversations: {
+            func: function conversation(stream) {
+                $(document).delegate("#stream .conversation", "click", function(e){
+                    e.preventDefault();
+                    var li = $(this).parents("li");
+                    var tweet = li.data("tweet");
+                    var con = tweet.conversation;
+                    
+                    $("#mainnav").find("li").removeClass("active")
+                    
+                    $("#stream li").removeClass("conversation");
+                    var className = "conversation" + con.index;
+                    window.location.hash = "#" + className;
+
+                    $("li." + className).each(function(){
+                        var li = $(this);
+                        var tweet = li.data("tweet");
+                        tweet.fetchNotInStream()
+                    })
+                })
+            }
+        },
+                    
         // calculate the age of the tweets and update it
         age: {
             func: function age (tweet) {
@@ -358,6 +383,7 @@
         plugins.retweet,
         plugins.deleteStatus,
         plugins.favorite,
+        plugins.conversations,
         plugins.age
     ];
 

@@ -82,3 +82,15 @@ exports.shortenURL = function(req,res){
         console.error(err.message);
     });
 }
+
+exports.reply = function(req,res){
+    var twitter = new node_twitter({
+        consumer_key: config.TWITTER_CONSUMER_KEY,
+        consumer_secret: config.TWITTER_CONSUMER_SECRET,
+        access_token_key: req.user.twitter_token,
+        access_token_secret: req.user.twitter_token_secret
+    })
+    .get(req.body.request.query,{id:req.body.request.id}, function(data){
+        res.send(data);
+    });
+}
