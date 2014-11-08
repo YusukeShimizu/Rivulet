@@ -1,6 +1,6 @@
 {
-    "TWITTER_CONSUMER_KEY": "GfuY2Rjy3v2pI7RkUUmnQ",
-    "TWITTER_CONSUMER_SECRET": "X2BgKMo8ojFpV6vdFIV4sbURqkLe6COg6tEE5yOuo0",
+    "TWITTER_CONSUMER_KEY": "9RoklwPe4F82TtSCW0bWB4MdR",
+    "TWITTER_CONSUMER_SECRET": "TJKHfeB2D9ourMQkeiMLiubgbHKsK3yUdHijIuldezYrV7K22n",
     "callbackURL": "http://candy-twitter.com/auth/twitter/callback",
     "MEMORY_STORE": "secret",
     "GOOGLE_API_KEY": "AIzaSyBuYtjU-oCGPo355j8xMoz6fxNkvE8gfg0",
