@@ -17,18 +17,15 @@ var io = require('socket.io').listen(server);
 var MySQLSessionStore = require('connect-mysql-session')(express);
 var options = {
     config: {
-        host: config.MYSQL_HOST,
         user: config.MYSQL_USER,
-        port: config.MYSQL_PORT,
-        password: config.MYSQL_PASSWORD,
         database: config.MYSQL_DBNAME,
-        connectionLimit: 50,
-        queueLimit: 0,
-        waitForConnection: true
+        password: config.MYSQL_PASSWORD,
+        host: config.MYSQL_HOST,
+        port: config.MYSQL_PORT
     }
 }
 var sessionStore = new MySQLSessionStore(options, {
-    "defaultExpiration": 1000*60*60*24*7
+    "defaultExpiration": 1000*60*60*24*7,
 });
 var cookieParser = express.cookieParser("cookieParser");
 var connection = require(__dirname + '/lib/connection.js');
