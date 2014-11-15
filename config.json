@@ -9,6 +9,6 @@
     "MYSQL_USER": "YusukeShimizu",
     "MYSQL_PASSWORD": "candy",
     "MYSQL_DBNAME": "candy_twitter",
-    "MYSQL_PORT”: 7392,
+    "MYSQL_PORT": 7392,
     "port": 5000
 }
