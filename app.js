@@ -14,19 +14,16 @@ var server = http.createServer(app);
 
 // using socket.io
 var io = require('socket.io').listen(server);
-var MySQLSessionStore = require('connect-mysql-session')(express);
+var MySQLSessionStore = require('express-mysql-session');
 var options = {
-    config: {
-        user: config.MYSQL_USER,
-        database: config.MYSQL_DBNAME,
-        password: config.MYSQL_PASSWORD,
-        host: config.MYSQL_HOST,
-        port: config.MYSQL_PORT
-    }
+    host: config.MYSQL_HOST,
+    port: config.MYSQL_PORT,
+    user: config.MYSQL_USER,
+    password: config.MYSQL_PASSWORD,    
+    database: config.MYSQL_DBNAME,
+    expiration: 1000*60*60*24*7
 }
-var sessionStore = new MySQLSessionStore(options, {
-    "defaultExpiration": 1000*60*60*24*7,
-});
+var sessionStore = new MySQLSessionStore(options);
 var cookieParser = express.cookieParser("cookieParser");
 var connection = require(__dirname + '/lib/connection.js');
 
