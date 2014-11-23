@@ -1,0 +1,14 @@
+{
+    "TWITTER_CONSUMER_KEY": "your key",
+    "TWITTER_CONSUMER_SECRET": "your key secret",
+    "callbackURL": "http://rivulet.bruwbird.com/auth/twitter/callback",
+    "MEMORY_STORE": "secret",
+    "GOOGLE_API_KEY": "your api key",
+    "connect_MYSQL": false,
+    "MYSQL_HOST": "your MySQL host",
+    "MYSQL_USER": "your MySQL user",
+    "MYSQL_PASSWORD": "your MySQL pass",
+    "MYSQL_DBNAME": "your DB name",
+    "MYSQL_PORT": "3306",
+    "port": "5000"
+}
